@@ -19,7 +19,6 @@ import android.hardware.SensorManager;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 
 public class MainActivity extends AppCompatActivity
