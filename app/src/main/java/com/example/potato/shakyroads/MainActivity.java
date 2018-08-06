@@ -91,11 +91,16 @@ public class MainActivity extends AppCompatActivity
         mSimulationView.stopSimulation();
     }
 
+    //display the reading
+    public void displayReading(float val) {
+        TextView display = (TextView)findViewById(R.id.reading);
+        display.setText(Float.toString(val));
+    }
 
-    class SimulationView extends AppCompatActivity implements SensorEventListener {
+    public class SimulationView extends AppCompatActivity implements SensorEventListener {
 
         private Sensor mAccelerometer;
-        private float reading;
+        public float reading;
 
 
         // called when the app resumes or is opened
@@ -110,25 +115,22 @@ public class MainActivity extends AppCompatActivity
 
         public SimulationView(Context context) {
             //put some stuff here
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         }
 
-        //display the reading
-        public void displayReading(float val) {
-            TextView scoreView = (TextView)findViewById(R.id.reading);
-            scoreView.setText(String.valueOf(val));
-        }
 
         /*called whenever the accelerometer picks up any movement*/
         @Override
         public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+            if (event.sensor.getType()==Sensor.TYPE_LINEAR_ACCELERATION){
                 float x = event.values[0];
                 float y = event.values[1];
                 float z = event.values[2];
 
-                reading = x;
-
-                displayReading(reading);
+                reading = y;
+                if (reading >= 0.1) {
+                    displayReading(reading);
+                }
             }
         }
 
