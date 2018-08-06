@@ -19,6 +19,7 @@ import android.hardware.SensorManager;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         // instantiate our simulation view and set it as the activity's content
         mSimulationView = new SimulationView(this);
         //mSimulationView.setBackgroundResource(R.drawable.wood);
-        //csetContentView(mSimulationView);
+        //setContentView(mSimulationView);
     }
 
 
@@ -111,6 +112,12 @@ public class MainActivity extends AppCompatActivity
             //put some stuff here
         }
 
+        //display the reading
+        public void displayReading(float val) {
+            TextView scoreView = (TextView)findViewById(R.id.reading);
+            scoreView.setText(String.valueOf(val));
+        }
+
         /*called whenever the accelerometer picks up any movement*/
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -120,6 +127,8 @@ public class MainActivity extends AppCompatActivity
                 float z = event.values[2];
 
                 reading = x;
+
+                displayReading(reading);
             }
         }
 
@@ -186,4 +195,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
