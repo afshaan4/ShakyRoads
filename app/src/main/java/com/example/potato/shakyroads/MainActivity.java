@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity
 
     private SimulationView mSimulationView;
     private SensorManager mSensorManager;
-    private Sensor mSensor;
+    // uncomment if you want to use the sensor in this class
+    //private Sensor mSensor;
     private WindowManager mWindowManager;
     private Display mDisplay;
 
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "This button does nothing", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -56,18 +57,18 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //get instances of SensorManager and the linear motion sensor
+        //get instances of SensorManager
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
+        //uncomment if you want to use the sensor in this class
+        //mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         // Get an instance of the WindowManager
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mDisplay = mWindowManager.getDefaultDisplay();
 
-        // instantiate our simulation view and set it as the activity's content
+        // instantiate our simulation view
         mSimulationView = new SimulationView(this);
-        //mSimulationView.setBackgroundResource(R.drawable.wood);
-        //setContentView(mSimulationView);
     }
 
 
