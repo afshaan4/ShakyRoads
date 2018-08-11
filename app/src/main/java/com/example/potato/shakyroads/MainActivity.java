@@ -22,6 +22,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.widget.TextView;
 
+import static java.lang.String.valueOf;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity
     // displays the reading
     public void displayReading(float val) {
         TextView display = (TextView)findViewById(R.id.reading);
-        display.setText(Float.toString(val));
+        display.setText(valueOf(val));
     }
 
 
