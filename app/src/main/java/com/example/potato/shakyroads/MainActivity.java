@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.view.Display;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,19 +17,21 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.view.WindowManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private accelerometerView maccelerometerView;
+    ///////////////////////////
+    // variables for this class
+    ///////////////////////////
+    private AccelerometerView mAccelerometerView;
     private SensorManager mSensorManager;
-    // uncomment if you want to use the sensor in this class
-    //private Sensor mSensor;
-    private WindowManager mWindowManager;
-    private Display mDisplay;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +58,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //get instances of SensorManager
+        // get instances of SensorManager
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        //uncomment if you want to use the sensor in this class
-        //mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-
-        // Get an instance of the WindowManager
-        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        mDisplay = mWindowManager.getDefaultDisplay();
+        // get an instance of LocationManager
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         // instantiate our accelerometer view
-        maccelerometerView = new accelerometerView(this);
+        mAccelerometerView = new AccelerometerView(this);
     }
 
 
@@ -76,20 +73,20 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        // Start the reading from the accelerometer
-        maccelerometerView.startaccelerometer();
+        // Start the reading from the accelerometer when the activity is resumed
+        mAccelerometerView.startAccelerometer();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        /*
-         * When the activity is paused, we make sure to release our sensor resources
-         */
-        maccelerometerView.stopaccelerometer();
+
+        // When the activity is paused, we make sure to release our sensor resources
+        mAccelerometerView.stopAccelerometer();
     }
 
-    //displays the reading
+
+    // displays the reading
     public void displayReading(float val) {
         TextView display = (TextView)findViewById(R.id.reading);
         display.setText(Float.toString(val));
@@ -97,26 +94,29 @@ public class MainActivity extends AppCompatActivity
 
 
     //////////////////////////////////////////////////////////////////////////////////////
-    //The class for the accelerometer
+    // The class for the accelerometer
     //////////////////////////////////////////////////////////////////////////////////////
-    public class accelerometerView extends AppCompatActivity implements SensorEventListener {
+    public class AccelerometerView extends AppCompatActivity implements SensorEventListener {
 
+        //////////////////////
+        // vars for this class
+        //////////////////////
         private Sensor mAccelerometer;
         public float reading;
 
 
         // called when the app resumes or is opened
-        public void startaccelerometer() {
+        public void startAccelerometer() {
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
         // called when the app is closed or "hibernated"
-        public void stopaccelerometer() {
+        public void stopAccelerometer() {
             mSensorManager.unregisterListener(this);
         }
 
-        public accelerometerView(Context context) {
-            //put some stuff here
+        public AccelerometerView(Context context) {
+            // put some stuff here
             mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         }
 
