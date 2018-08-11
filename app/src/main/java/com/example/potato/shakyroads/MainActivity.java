@@ -25,7 +25,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private SimulationView mSimulationView;
+    private accelerometerView maccelerometerView;
     private SensorManager mSensorManager;
     // uncomment if you want to use the sensor in this class
     //private Sensor mSensor;
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mDisplay = mWindowManager.getDefaultDisplay();
 
-        // instantiate our simulation view
-        mSimulationView = new SimulationView(this);
+        // instantiate our accelerometer view
+        maccelerometerView = new accelerometerView(this);
     }
 
 
@@ -76,45 +76,46 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        // Start the simulation
-        mSimulationView.startSimulation();
+        // Start the reading from the accelerometer
+        maccelerometerView.startaccelerometer();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         /*
-         * When the activity is paused, we make sure to stop the simulation,
-         * release our sensor resources
+         * When the activity is paused, we make sure to release our sensor resources
          */
-
-        // Stop the simulation
-        mSimulationView.stopSimulation();
+        maccelerometerView.stopaccelerometer();
     }
 
-    //display the reading
+    //displays the reading
     public void displayReading(float val) {
         TextView display = (TextView)findViewById(R.id.reading);
         display.setText(Float.toString(val));
     }
 
-    public class SimulationView extends AppCompatActivity implements SensorEventListener {
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    //The class for the accelerometer
+    //////////////////////////////////////////////////////////////////////////////////////
+    public class accelerometerView extends AppCompatActivity implements SensorEventListener {
 
         private Sensor mAccelerometer;
         public float reading;
 
 
         // called when the app resumes or is opened
-        public void startSimulation() {
+        public void startaccelerometer() {
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
         // called when the app is closed or "hibernated"
-        public void stopSimulation() {
+        public void stopaccelerometer() {
             mSensorManager.unregisterListener(this);
         }
 
-        public SimulationView(Context context) {
+        public accelerometerView(Context context) {
             //put some stuff here
             mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         }
@@ -129,9 +130,9 @@ public class MainActivity extends AppCompatActivity
                 float z = event.values[2];
 
                 reading = y;
-                if (reading >= 0.1) {
-                    displayReading(reading);
-                }
+
+                displayReading(reading);
+
             }
         }
 
