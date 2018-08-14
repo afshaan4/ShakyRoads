@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity
     // variables for this class
     ///////////////////////////
     private AccelerometerView mAccelerometerView;
+    private LocationView mLocationView;
     private SensorManager mSensorManager;
 
 
@@ -66,19 +67,24 @@ public class MainActivity extends AppCompatActivity
         // get an instance of LocationManager
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        // instantiate our accelerometer view
+        // instantiate the accelerometer view
         mAccelerometerView = new AccelerometerView(this);
+
+        // instantiate the location view
+        mLocationView = new LocationView(this);
     }
 
 
+    // when the activity resumes
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Start the reading from the accelerometer when the activity is resumed
+        // Start the reading from the accelerometer
         mAccelerometerView.startAccelerometer();
     }
 
+    // when the activity pauses
     @Override
     protected void onPause() {
         super.onPause();
@@ -107,12 +113,12 @@ public class MainActivity extends AppCompatActivity
         public float reading;
 
 
-        // called when the app resumes or is opened
+        // start the sensor listener
         public void startAccelerometer() {
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
-        // called when the app is closed or "hibernated"
+        // stop the sensor listener
         public void stopAccelerometer() {
             mSensorManager.unregisterListener(this);
         }
@@ -142,6 +148,35 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
         }
+    }
+
+
+    public class LocationView extends AppCompatActivity implements LocationListener {
+
+        ///////////////////////////////////
+        // vars for this class
+        ///////////////////////////////////
+        private Location mLocation;
+        
+
+        public void onLocationChanged(Location location) {
+            // Called when a new location is found by the network location provider.
+
+        }
+
+        /////////////////////////////////////////////////////////////////////////
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        public void onProviderDisabled(String provider) {
+
+        }
+        /////////////////////////////////////////////////////////////////////////
     }
 
     @Override
