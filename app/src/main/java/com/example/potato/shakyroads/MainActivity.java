@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     private AccelerometerView mAccelerometerView;
     private LocationView mLocationView;
     private SensorManager mSensorManager;
+    private LocationManager mLocationManager;
 
 
     @Override
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         // get an instance of LocationManager
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // instantiate the accelerometer view
         mAccelerometerView = new AccelerometerView(this);
@@ -82,6 +83,8 @@ public class MainActivity extends AppCompatActivity
 
         // Start the reading from the accelerometer
         mAccelerometerView.startAccelerometer();
+        // start getting location updates
+        mLocationView.startLocation();
     }
 
     // when the activity pauses
@@ -91,6 +94,8 @@ public class MainActivity extends AppCompatActivity
 
         // When the activity is paused, we make sure to release our sensor resources
         mAccelerometerView.stopAccelerometer();
+        // stop the location listener
+        mLocationView.stopLocation();
     }
 
 
@@ -151,13 +156,30 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    //////////////////////////////////////////////////////////////////////////////////////
+    // The class for the GPS
+    //////////////////////////////////////////////////////////////////////////////////////
     public class LocationView extends AppCompatActivity implements LocationListener {
 
-        ///////////////////////////////////
+        //////////////////////
         // vars for this class
-        ///////////////////////////////////
+        //////////////////////
         private Location mLocation;
-        
+
+
+        // Register the listener with the Location Manager to receive location updates
+        public void startLocation() {
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+
+        // Remove the location listener to stop receiving location updates
+        public void stopLocation() {
+            mLocationManager.removeUpdates(this);
+        }
+
+        public LocationView(Context context) {
+            // put some stuff here
+        }
 
         public void onLocationChanged(Location location) {
             // Called when a new location is found by the network location provider.
