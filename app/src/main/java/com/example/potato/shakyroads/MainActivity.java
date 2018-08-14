@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity
         // Register the listener with the Location Manager to receive location updates
         public void startLocation() {
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            // TODO handle this error ^
         }
 
         // Remove the location listener to stop receiving location updates
@@ -183,7 +184,8 @@ public class MainActivity extends AppCompatActivity
 
         public void onLocationChanged(Location location) {
             // Called when a new location is found by the network location provider.
-
+            double latitude = (double) (location.getLatitude());
+            double longitude = (double) (location.getLongitude());
         }
 
         /////////////////////////////////////////////////////////////////////////
@@ -260,3 +262,4 @@ public class MainActivity extends AppCompatActivity
     }
 
 }
+
