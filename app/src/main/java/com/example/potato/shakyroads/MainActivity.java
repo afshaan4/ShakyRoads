@@ -99,10 +99,19 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /*
+    Display functions that I need for testing.
+     */
     // displays the reading
-    public void displayReading(float val) {
+    public void displayAcceleration(float accleration) {
         TextView display = (TextView)findViewById(R.id.reading);
-        display.setText(valueOf(val));
+        display.setText(valueOf(accleration));
+    }
+
+    // displays the longitude
+    public void displayLocation(double location) {
+        TextView display = (TextView)findViewById(R.id.location);
+        display.setText(valueOf(location));
     }
 
 
@@ -144,7 +153,7 @@ public class MainActivity extends AppCompatActivity
 
                 reading = y;
 
-                displayReading(reading);
+                displayAcceleration(reading);
 
             }
         }
