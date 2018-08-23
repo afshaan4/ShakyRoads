@@ -1,9 +1,14 @@
 package com.example.potato.shakyroads;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +26,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.widget.TextView;
+import android.Manifest;
 
 import static java.lang.String.valueOf;
 
@@ -73,6 +79,9 @@ public class MainActivity extends AppCompatActivity
 
         // instantiate the location view
         mLocationView = new LocationView(this);
+
+        //TODO: put this somewhere else when ready
+        mLocationView.checkLocationPermission();
     }
 
 
@@ -94,7 +103,7 @@ public class MainActivity extends AppCompatActivity
 
         // When the activity is paused, we make sure to release our sensor resources
         mAccelerometerView.stopAccelerometer();
-        // stop the location listener
+        // stop the location listeners
         mLocationView.stopLocation();
     }
 
@@ -174,17 +183,106 @@ public class MainActivity extends AppCompatActivity
         // vars for this class
         //////////////////////
         private Location mLocation;
+        public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //runtime permission stuff
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        public boolean checkLocationPermission() {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+                    new AlertDialog.Builder(this)
+                            .setTitle(R.string.title_location_permission)
+                            .setMessage(R.string.text_location_permission)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    //Prompt the user once explanation has been shown
+                                    ActivityCompat.requestPermissions(MainActivity.this,
+                                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                            MY_PERMISSIONS_REQUEST_LOCATION);
+                                }
+                            })
+                            .create()
+                            .show();
+
+
+                } else {
+                    // No explanation needed, we can request the permission.
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            MY_PERMISSIONS_REQUEST_LOCATION);
+                }
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        @Override
+        public void onRequestPermissionsResult(int requestCode,
+                                               String permissions[], int[] grantResults) {
+            switch (requestCode) {
+                case MY_PERMISSIONS_REQUEST_LOCATION: {
+                    // If request is cancelled, the result arrays are empty.
+                    if (grantResults.length > 0
+                            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                        // permission was granted, yay! Do the
+                        // location-related task you need to do.
+                        if (ContextCompat.checkSelfPermission(this,
+                                Manifest.permission.ACCESS_FINE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED) {
+
+                            //Request location updates:
+                            startLocation();
+                        }
+
+                    } else {
+
+                        // permission denied, boo! Disable the
+                        // functionality that depends on this permission.
+
+                    }
+                    return;
+                }
+
+            }
+        }
 
 
         // Register the listener with the Location Manager to receive location updates
         public void startLocation() {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            }
+
             // TODO handle this error ^
         }
 
         // Remove the location listener to stop receiving location updates
         public void stopLocation() {
-            mLocationManager.removeUpdates(this);
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+
+                mLocationManager.removeUpdates(this);
+            }
+
         }
 
         public LocationView(Context context) {
@@ -195,6 +293,8 @@ public class MainActivity extends AppCompatActivity
             // Called when a new location is found by the network location provider.
             double latitude = (double) (location.getLatitude());
             double longitude = (double) (location.getLongitude());
+
+            displayLocation(latitude);
         }
 
         /////////////////////////////////////////////////////////////////////////
