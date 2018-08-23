@@ -112,9 +112,9 @@ public class MainActivity extends AppCompatActivity
     Display functions that I need for testing.
      */
     // displays the reading
-    public void displayAcceleration(float accleration) {
+    public void displayAcceleration(float acceleration) {
         TextView display = (TextView)findViewById(R.id.reading);
-        display.setText(valueOf(accleration));
+        display.setText(valueOf(acceleration));
     }
 
     // displays the longitude
