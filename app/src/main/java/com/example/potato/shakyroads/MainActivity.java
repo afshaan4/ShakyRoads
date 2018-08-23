@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         // instantiate the location view
         mLocationView = new LocationView(this);
 
-        //TODO: put this somewhere else when ready
+        //TODO call this when a button is pressed
         mLocationView.checkLocationPermission();
     }
 
@@ -270,8 +270,6 @@ public class MainActivity extends AppCompatActivity
 
                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             }
-
-            // TODO handle this error ^
         }
 
         // Remove the location listener to stop receiving location updates
