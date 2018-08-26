@@ -1,5 +1,6 @@
 package com.example.potato.shakyroads;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // gets the gps permission if we don't have it, if it has the permission start the GPS
+    // I don't know if I need this here
     public void startGPS(View view) {
         mLocationView.checkLocationPermission();
         mLocationView.startLocation();
@@ -186,6 +188,7 @@ public class MainActivity extends AppCompatActivity
         // vars for this class
         //////////////////////
         private Location mLocation;
+        private Context mContext;
         public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 
@@ -223,7 +226,7 @@ public class MainActivity extends AppCompatActivity
 
                 } else {
                     // No explanation needed, we can request the permission.
-                    ActivityCompat.requestPermissions(this,
+                    ActivityCompat.requestPermissions((Activity)mContext,
                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             MY_PERMISSIONS_REQUEST_LOCATION);
                 }
@@ -264,7 +267,7 @@ public class MainActivity extends AppCompatActivity
 
         // Register the listener with the Location Manager to receive location updates
         public void startLocation() {
-            if (ContextCompat.checkSelfPermission(this,
+            if (ContextCompat.checkSelfPermission((Activity)mContext,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
 
@@ -274,7 +277,7 @@ public class MainActivity extends AppCompatActivity
 
         // Remove the location listener to stop receiving location updates
         public void stopLocation() {
-            if (ContextCompat.checkSelfPermission(this,
+            if (ContextCompat.checkSelfPermission((Activity)mContext,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
 
