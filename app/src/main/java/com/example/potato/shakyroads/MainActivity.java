@@ -79,9 +79,6 @@ public class MainActivity extends AppCompatActivity
 
         // instantiate the location view
         mLocationView = new LocationView(this);
-
-        //TODO call this when a button is pressed
-        mLocationView.checkLocationPermission();
     }
 
 
@@ -121,6 +118,12 @@ public class MainActivity extends AppCompatActivity
     public void displayLocation(double location) {
         TextView display = (TextView)findViewById(R.id.location);
         display.setText(valueOf(location));
+    }
+
+    // gets the gps permission if we don't have it, if it has the permission start the GPS
+    public void startGPS(View view) {
+        mLocationView.checkLocationPermission();
+        mLocationView.startLocation();
     }
 
 
@@ -239,8 +242,7 @@ public class MainActivity extends AppCompatActivity
                     if (grantResults.length > 0
                             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                        // permission was granted, yay! Do the
-                        // location-related task you need to do.
+                        // permission was granted, do the location-related task you need to do.
                         if (ContextCompat.checkSelfPermission(this,
                                 Manifest.permission.ACCESS_FINE_LOCATION)
                                 == PackageManager.PERMISSION_GRANTED) {
@@ -251,13 +253,11 @@ public class MainActivity extends AppCompatActivity
 
                     } else {
 
-                        // permission denied, boo! Disable the
-                        // functionality that depends on this permission.
+                        // permission denied, disable the functionality that depends on this permission.
 
                     }
                     return;
                 }
-
             }
         }
 
