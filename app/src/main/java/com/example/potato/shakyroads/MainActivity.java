@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity
                     != PackageManager.PERMISSION_GRANTED) {
 
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)mContext,
                         Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                     // Show an explanation to the user *asynchronously* -- don't block
@@ -214,8 +214,8 @@ public class MainActivity extends AppCompatActivity
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    //Prompt the user once explanation has been shown
-                                    ActivityCompat.requestPermissions(MainActivity.this,
+                                    //Prompt the user once explanation has been shown, used to be this.MainActivity
+                                    ActivityCompat.requestPermissions((Activity)mContext,
                                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                             MY_PERMISSIONS_REQUEST_LOCATION);
                                 }
@@ -256,8 +256,7 @@ public class MainActivity extends AppCompatActivity
 
                     } else {
 
-                        // permission denied, disable the functionality that depends on this permission.
-
+                        // permission denied, disable the thing that depends on this permission.
                     }
                     return;
                 }
@@ -298,7 +297,7 @@ public class MainActivity extends AppCompatActivity
             displayLocation(latitude);
         }
 
-        /////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
         }
@@ -310,7 +309,7 @@ public class MainActivity extends AppCompatActivity
         public void onProviderDisabled(String provider) {
 
         }
-        /////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     @Override
