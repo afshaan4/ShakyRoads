@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    //Prompt the user once explanation has been shown, used to be this.MainActivity
+                                    //Prompt the user once explanation has been shown, used to be MainActivity.this
                                     ActivityCompat.requestPermissions((Activity)mContext,
                                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                             MY_PERMISSIONS_REQUEST_LOCATION);
