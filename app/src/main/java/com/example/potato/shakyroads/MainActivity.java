@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity
             float z = event.values[2];
 
             displayAcceleration(y);
-
         }
     }
 
@@ -162,7 +161,9 @@ public class MainActivity extends AppCompatActivity
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
-    for runtime permissions
+    This checks if the app has the permissions to use the GPS, if the app doesn't have
+    the permissions then it shows the user a dialog asking for the permission.
+    Returns true or false depending on whether it has the permission or not
      */
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
@@ -204,7 +205,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     /*
-    also for runtime permissions
+    Checks if the app got the users permission to use the GPS, if it did get the permission then it
+    calls startLocation(). startLocation() has a check as well to see if the app has the permission
+    to use the GPS.
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -254,8 +257,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    // Called when a new location is found by the network location provider.
+    @Override
     public void onLocationChanged(Location location) {
-        // Called when a new location is found by the network location provider.
         double latitude = (double) (location.getLatitude());
         double longitude = (double) (location.getLongitude());
 
@@ -263,10 +267,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     // these are not used, leave them here
+    @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
 
+    @Override
     public void onProviderEnabled(String provider) {}
 
+    @Override
     public void onProviderDisabled(String provider) {}
 
 
