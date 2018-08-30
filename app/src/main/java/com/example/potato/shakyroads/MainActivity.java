@@ -75,10 +75,10 @@ public class MainActivity extends AppCompatActivity
         // get an instance of LocationManager
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        // instantiate the accelerometer view
+        // instantiate the accelerometer class?
         mAccelerometerView = new AccelerometerView(this);
 
-        // instantiate the location view
+        // instantiate the location class?
         mLocationView = new LocationView(this);
     }
 
@@ -129,9 +129,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // The class for the accelerometer
-    //////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public class AccelerometerView extends AppCompatActivity implements SensorEventListener {
 
         //////////////////////
@@ -179,9 +179,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // The class for the GPS
-    //////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public class LocationView extends AppCompatActivity implements LocationListener {
 
         //////////////////////
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         public boolean checkLocationPermission() {
-            if (ContextCompat.checkSelfPermission(this,
+            if (ContextCompat.checkSelfPermission((Activity)mContext,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
 

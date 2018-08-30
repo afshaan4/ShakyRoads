@@ -14,3 +14,6 @@ I am making this app because:
 - [ ] get gps working
 - [ ] dump readings to a csv file
 - [ ] plot acceleration readings onto a map
+
+btw, the classes for the accelerometer and gps are most certainly written wrong, ill fix that when I
+learn more java, or when it breaks.
