@@ -33,15 +33,14 @@ import static java.lang.String.valueOf;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener, LocationListener {
 
-    ///////////////////////////
-    // variables for this class
-    ///////////////////////////
-    private AccelerometerView mAccelerometerView;
-    private LocationView mLocationView;
+
     private SensorManager mSensorManager;
     private LocationManager mLocationManager;
+    private Sensor mAccelerometer;
+    private Context mContext;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 
     @Override
@@ -72,14 +71,11 @@ public class MainActivity extends AppCompatActivity
         // get instances of SensorManager
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
+        // get and instance of the linear motion accelerometer
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
         // get an instance of LocationManager
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        // instantiate the accelerometer class?
-        mAccelerometerView = new AccelerometerView(this);
-
-        // instantiate the location class?
-        mLocationView = new LocationView(this);
     }
 
 
@@ -89,9 +85,9 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
 
         // Start the reading from the accelerometer
-        mAccelerometerView.startAccelerometer();
+        startAccelerometer();
         // start getting location updates
-        mLocationView.startLocation();
+        startLocation();
     }
 
     // when the activity pauses
@@ -100,9 +96,9 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
 
         // When the activity is paused, we make sure to release our sensor resources
-        mAccelerometerView.stopAccelerometer();
+        stopAccelerometer();
         // stop the location listeners
-        mLocationView.stopLocation();
+        stopLocation();
     }
 
 
@@ -121,196 +117,159 @@ public class MainActivity extends AppCompatActivity
         display.setText(valueOf(location));
     }
 
-    // gets the gps permission if we don't have it, if it has the permission start the GPS
+    // gets the gps permission if we don't have it, if it has the permission: start the GPS
     // I don't know if I need this here
     public void startGPS(View view) {
-        mLocationView.checkLocationPermission();
-        mLocationView.startLocation();
+        checkLocationPermission();
+        startLocation();
     }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // The class for the accelerometer
+    // The accelerometer stuff
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    public class AccelerometerView extends AppCompatActivity implements SensorEventListener {
 
-        //////////////////////
-        // vars for this class
-        //////////////////////
-        private Sensor mAccelerometer;
-        public float reading;
+    // start the sensor listener
+    public void startAccelerometer() {
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
 
+    // stop the sensor listener
+    public void stopAccelerometer() {
+        mSensorManager.unregisterListener(this);
+    }
 
-        // start the sensor listener
-        public void startAccelerometer() {
-            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    //called whenever the accelerometer picks up any movement
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType()==Sensor.TYPE_LINEAR_ACCELERATION) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            displayAcceleration(y);
+
         }
+    }
 
-        // stop the sensor listener
-        public void stopAccelerometer() {
-            mSensorManager.unregisterListener(this);
-        }
-
-        public AccelerometerView(Context context) {
-            // put some stuff here
-            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        }
+    // leave this here, it's not used
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
 
-        /*called whenever the accelerometer picks up any movement*/
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType()==Sensor.TYPE_LINEAR_ACCELERATION){
-                float x = event.values[0];
-                float y = event.values[1];
-                float z = event.values[2];
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // The GPS stuff
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-                reading = y;
+    /*
+    for runtime permissions
+     */
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
-                displayAcceleration(reading);
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
 
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.title_location_permission)
+                        .setMessage(R.string.text_location_permission)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown, used to be MainActivity.this
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
             }
-        }
-
-        // leave this here at the bottom of the class, it's not used
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            return false;
+        } else {
+            return true;
         }
     }
 
+    /*
+    also for runtime permissions
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, do the location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // The class for the GPS
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    public class LocationView extends AppCompatActivity implements LocationListener {
-
-        //////////////////////
-        // vars for this class
-        //////////////////////
-        private Location mLocation;
-        private Context mContext;
-        public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        //runtime permission stuff
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        public boolean checkLocationPermission() {
-            if (ContextCompat.checkSelfPermission((Activity)mContext,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)mContext,
-                        Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-                    new AlertDialog.Builder(this)
-                            .setTitle(R.string.title_location_permission)
-                            .setMessage(R.string.text_location_permission)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    //Prompt the user once explanation has been shown, used to be MainActivity.this
-                                    ActivityCompat.requestPermissions((Activity)mContext,
-                                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                            MY_PERMISSIONS_REQUEST_LOCATION);
-                                }
-                            })
-                            .create()
-                            .show();
-
+                        //Request location updates:
+                        startLocation();
+                    }
 
                 } else {
-                    // No explanation needed, we can request the permission.
-                    ActivityCompat.requestPermissions((Activity)mContext,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            MY_PERMISSIONS_REQUEST_LOCATION);
+
+                    // permission denied, disable the thing that depends on this permission.
                 }
-                return false;
-            } else {
-                return true;
+                return;
             }
         }
-
-        @Override
-        public void onRequestPermissionsResult(int requestCode,
-                                               String permissions[], int[] grantResults) {
-            switch (requestCode) {
-                case MY_PERMISSIONS_REQUEST_LOCATION: {
-                    // If request is cancelled, the result arrays are empty.
-                    if (grantResults.length > 0
-                            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                        // permission was granted, do the location-related task you need to do.
-                        if (ContextCompat.checkSelfPermission(this,
-                                Manifest.permission.ACCESS_FINE_LOCATION)
-                                == PackageManager.PERMISSION_GRANTED) {
-
-                            //Request location updates:
-                            startLocation();
-                        }
-
-                    } else {
-
-                        // permission denied, disable the thing that depends on this permission.
-                    }
-                    return;
-                }
-            }
-        }
-
-
-        // Register the listener with the Location Manager to receive location updates
-        public void startLocation() {
-            if (ContextCompat.checkSelfPermission((Activity)mContext,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            }
-        }
-
-        // Remove the location listener to stop receiving location updates
-        public void stopLocation() {
-            if (ContextCompat.checkSelfPermission((Activity)mContext,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-
-                mLocationManager.removeUpdates(this);
-            }
-
-        }
-
-        public LocationView(Context context) {
-            // put some stuff here
-        }
-
-        public void onLocationChanged(Location location) {
-            // Called when a new location is found by the network location provider.
-            double latitude = (double) (location.getLatitude());
-            double longitude = (double) (location.getLongitude());
-
-            displayLocation(latitude);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        public void onProviderDisabled(String provider) {
-
-        }
-        ////////////////////////////////////////////////////////////////////////////////////////////
     }
+
+
+    // Register the listener with the Location Manager to receive location updates
+    public void startLocation() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+    }
+
+    // Remove the location listener to stop receiving location updates
+    public void stopLocation() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            mLocationManager.removeUpdates(this);
+        }
+
+    }
+
+    public void onLocationChanged(Location location) {
+        // Called when a new location is found by the network location provider.
+        double latitude = (double) (location.getLatitude());
+        double longitude = (double) (location.getLongitude());
+
+        displayLocation(latitude);
+    }
+
+    // these are not used, leave them here
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+    public void onProviderEnabled(String provider) {}
+
+    public void onProviderDisabled(String provider) {}
+
+
 
     @Override
     public void onBackPressed() {
@@ -371,4 +330,3 @@ public class MainActivity extends AppCompatActivity
     }
 
 }
-
