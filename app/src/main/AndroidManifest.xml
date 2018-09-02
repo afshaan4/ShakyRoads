@@ -3,8 +3,8 @@
     package="com.example.potato.shakyroads">
 
     <!-- Permissions -->
-    <uses-feature android:name="android.hardware.location.gps" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <application
         android:allowBackup="true"
