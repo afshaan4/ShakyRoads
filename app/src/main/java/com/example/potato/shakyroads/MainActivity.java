@@ -112,8 +112,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     // displays the longitude
-    public void displayLocation(double location) {
-        TextView display = (TextView)findViewById(R.id.location);
+    public void displayLong(double location) {
+        TextView display = (TextView)findViewById(R.id.longitude);
+        display.setText(valueOf(location));
+    }
+
+    //displays the latitude
+    public void displayLat(double location) {
+        TextView display = (TextView)findViewById(R.id.latitude);
         display.setText(valueOf(location));
     }
 
@@ -263,7 +269,8 @@ public class MainActivity extends AppCompatActivity
         double latitude = (double) (location.getLatitude());
         double longitude = (double) (location.getLongitude());
 
-        displayLocation(latitude);
+        displayLong(longitude);
+        displayLat(latitude);
     }
 
     // these are not used, leave them here
