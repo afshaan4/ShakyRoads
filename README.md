@@ -7,6 +7,5 @@ and dumps those readings to a csv file, then using that data you can make a map 
 
 ### TODO
 
-- [ ] get it to open setting and ask user to enable the gps
 - [ ] dump readings to a csv file
 - [ ] plot acceleration readings onto a map
