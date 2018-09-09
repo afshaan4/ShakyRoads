@@ -9,4 +9,5 @@ and dumps those readings to a csv file, then using that data you can make a map 
 
 - [ ] dump readings to a csv file
 - [ ] plot acceleration readings onto a map
+- [ ] allow installing tha app on external storage
 - [x] Get the GPS to work

@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -142,17 +144,22 @@ public class MainActivity extends AppCompatActivity
      Writes the readings to a csv file.
      */
     public void saveData(double lat, double lng, double acc) {
-
         try {
             // check if the csv file exists, and make one if it doesn't
-            String filePath = "shakyroads.csv";
-            File file = new File(filePath);
+            String fileName = "shakyroads.csv";
+            File file = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOCUMENTS), fileName);
             if(!file.exists()) {
-                file = new File(filePath);
+                file = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOCUMENTS), fileName);
+            }
+            if (!file.mkdirs()) {
+                Log.e("saveData", "Directory not created");
+                // TODO make the directory instead of just complaining.
             }
 
             CSVWriter writer = new CSVWriter(
-                    new OutputStreamWriter(new FileOutputStream(filePath),
+                    new OutputStreamWriter(new FileOutputStream(fileName),
                             StandardCharsets.UTF_8), ',', '"', '"', "\n");
 
             // convert the data to strings
