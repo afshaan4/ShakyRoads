@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.Manifest;
 import com.opencsv.CSVWriter;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
@@ -141,20 +142,32 @@ public class MainActivity extends AppCompatActivity
      Writes the readings to a csv file.
      */
     public void saveData(double lat, double lng, double acc) {
-        CSVWriter writer = new CSVWriter(
-                new OutputStreamWriter(new FileOutputStream("shakyroads.csv"),
-                        StandardCharsets.UTF_8), ',', '"', '"', "\n");
 
-        // convert the data to strings
-        String latitude = String.valueOf(lat);
-        String longitude = String.valueOf(lng);
-        String acceleration = String.valueOf(acc);
+        try {
+            // check if the csv file exists, and make one if it doesn't
+            String filePath = "shakyroads.csv";
+            File file = new File(filePath);
+            if(!file.exists()) {
+                file = new File(filePath);
+            }
 
-        // then to an array of strings
-        String[] entries = new String[] {latitude, longitude, acceleration};
-        writer.writeNext(entries);
-        writer.close();
-        // TODO  put the above mess in a try-catch-finally
+            CSVWriter writer = new CSVWriter(
+                    new OutputStreamWriter(new FileOutputStream(filePath),
+                            StandardCharsets.UTF_8), ',', '"', '"', "\n");
+
+            // convert the data to strings
+            String latitude = String.valueOf(lat);
+            String longitude = String.valueOf(lng);
+            String acceleration = String.valueOf(acc);
+            // then to an array of strings
+            String[] entries = new String[] {latitude, longitude, acceleration};
+
+            // then write it
+            writer.writeNext(entries);
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
