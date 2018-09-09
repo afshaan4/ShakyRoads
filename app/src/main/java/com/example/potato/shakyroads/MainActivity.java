@@ -1,6 +1,5 @@
 package com.example.potato.shakyroads;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -28,6 +27,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.widget.TextView;
 import android.Manifest;
+import com.opencsv.CSVWriter;
+
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
 
 import static java.lang.String.valueOf;
 
@@ -103,10 +109,10 @@ public class MainActivity extends AppCompatActivity
 
 
     /*
-    Display functions that I need for testing.
+    Display functions for testing.
      */
     // displays the reading
-    public void displayAcceleration(float acceleration) {
+    public void displayAcceleration(double acceleration) {
         TextView display = (TextView)findViewById(R.id.reading);
         display.setText(valueOf(acceleration));
     }
@@ -131,6 +137,28 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /*
+     Writes the readings to a csv file.
+     */
+    public void saveData(double lat, double lng, double acc) {
+        CSVWriter writer = new CSVWriter(
+                new OutputStreamWriter(new FileOutputStream("shakyroads.csv"),
+                        StandardCharsets.UTF_8), ',', '"', '"', "\n");
+
+        // convert the data to strings
+        String latitude = String.valueOf(lat);
+        String longitude = String.valueOf(lng);
+        String acceleration = String.valueOf(acc);
+
+        // then to an array of strings
+        String[] entries = new String[] {latitude, longitude, acceleration};
+        writer.writeNext(entries);
+        writer.close();
+        // TODO  put the above mess in a try-catch-finally
+    }
+
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // The accelerometer stuff
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,9 +177,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType()==Sensor.TYPE_LINEAR_ACCELERATION) {
-            float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
+            double x = event.values[0];
+            double y = event.values[1];
+            double z = event.values[2];
 
             displayAcceleration(y);
         }
@@ -211,7 +239,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /*
-    Checks if the app got the users permission to use the GPS, if it did get the permission then it
+    Checks if the app got permission to use the GPS, if it did get the permission then it
     calls startLocation(). startLocation() has a check as well to see if the app has the permission
     to use the GPS.
      */
@@ -234,7 +262,7 @@ public class MainActivity extends AppCompatActivity
 
                 } else {
 
-                    // permission denied, disable the thing that depends on this permission.
+                    // TODO: disable the thing that depends on this permission.
                 }
                 return;
             }
@@ -263,7 +291,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    // Called when a new location is found by the network location provider.
+    // Called when a new location is found.
     @Override
     public void onLocationChanged(Location location) {
         double latitude = (double) (location.getLatitude());
