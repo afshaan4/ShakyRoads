@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 if (!file.mkdirs()) {
                     Log.e("saveData", "Directory not created");
+                    file.mkdirs();
                     // TODO make the directory instead of just complaining.
                 }
 
@@ -210,6 +211,8 @@ public class MainActivity extends AppCompatActivity
             double z = event.values[2];
 
             displayAcceleration(y);
+
+            saveData(0, 0, y);
         }
     }
 
