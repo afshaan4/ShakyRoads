@@ -154,14 +154,14 @@ public class MainActivity extends AppCompatActivity
             try {
                 // check if the csv file exists, and make one if it doesn't
                 String fileName = "shakyroads.csv";
-                File file = new File(Environment.getExternalStoragePublicDirectory(
+
+                File file = new File(mContext.getExternalFilesDir(
                         Environment.DIRECTORY_DOCUMENTS), fileName);
                 if(!file.exists()) {
-                    file = new File(Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_DOCUMENTS), fileName);
+                    Log.e("saveFile", "file not created");
                 }
                 if (!file.mkdirs()) {
-                    Log.e("saveData", "Directory not created");
+                    Log.e("makeDirectory", "Directory not created");
                     file.mkdirs();
                     // TODO make the directory instead of just complaining.
                 }
