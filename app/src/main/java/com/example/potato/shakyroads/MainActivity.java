@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    // when the activity resumes
+    /* when the activity resumes */
     @Override
     protected void onResume() {
         super.onResume();
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         startLocation();
     }
 
-    // when the activity pauses
+    /* when the activity pauses */
     @Override
     protected void onPause() {
         super.onPause();
@@ -114,66 +114,74 @@ public class MainActivity extends AppCompatActivity
     /*
     Display functions for testing.
      */
-    // displays the reading
+    /* displays the reading */
     public void displayAcceleration(double acceleration) {
         TextView display = (TextView)findViewById(R.id.reading);
         display.setText(valueOf(acceleration));
     }
 
-    // displays the longitude
+    /* displays the longitude */
     public void displayLong(double location) {
         TextView display = (TextView)findViewById(R.id.longitude);
         display.setText(valueOf(location));
     }
 
-    //displays the latitude
+    /* displays the latitude */
     public void displayLat(double location) {
         TextView display = (TextView)findViewById(R.id.latitude);
         display.setText(valueOf(location));
     }
 
-    // gets the gps permission if we don't have it, if it has the permission: start the GPS
-    // I don't know if I need this here
+    /* gets the gps permission if we don't have it, if it has the permission: start the GPS */
     public void startGPS(View view) {
         checkLocationPermission();
         startLocation();
     }
 
 
-    /*
-     Writes the readings to a csv file.
-     */
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Writes the readings to a csv file */
     public void saveData(double lat, double lng, double acc) {
-        try {
-            // check if the csv file exists, and make one if it doesn't
-            String fileName = "shakyroads.csv";
-            File file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOCUMENTS), fileName);
-            if(!file.exists()) {
-                file = new File(Environment.getExternalStoragePublicDirectory(
+        if (isExternalStorageWritable() == true) {
+            try {
+                // check if the csv file exists, and make one if it doesn't
+                String fileName = "shakyroads.csv";
+                File file = new File(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DOCUMENTS), fileName);
+                if(!file.exists()) {
+                    file = new File(Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DOCUMENTS), fileName);
+                }
+                if (!file.mkdirs()) {
+                    Log.e("saveData", "Directory not created");
+                    // TODO make the directory instead of just complaining.
+                }
+
+                CSVWriter writer = new CSVWriter(
+                        new OutputStreamWriter(new FileOutputStream(fileName),
+                                StandardCharsets.UTF_8), ',', '"', '"', "\n");
+
+                // convert the data to strings
+                String latitude = String.valueOf(lat);
+                String longitude = String.valueOf(lng);
+                String acceleration = String.valueOf(acc);
+                // then to an array of strings
+                String[] entries = new String[] {latitude, longitude, acceleration};
+
+                // then write it
+                writer.writeNext(entries);
+                writer.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            if (!file.mkdirs()) {
-                Log.e("saveData", "Directory not created");
-                // TODO make the directory instead of just complaining.
-            }
-
-            CSVWriter writer = new CSVWriter(
-                    new OutputStreamWriter(new FileOutputStream(fileName),
-                            StandardCharsets.UTF_8), ',', '"', '"', "\n");
-
-            // convert the data to strings
-            String latitude = String.valueOf(lat);
-            String longitude = String.valueOf(lng);
-            String acceleration = String.valueOf(acc);
-            // then to an array of strings
-            String[] entries = new String[] {latitude, longitude, acceleration};
-
-            // then write it
-            writer.writeNext(entries);
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -183,17 +191,17 @@ public class MainActivity extends AppCompatActivity
     // The accelerometer stuff
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // start the sensor listener
+    /* start the sensor listener */
     public void startAccelerometer() {
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    // stop the sensor listener
+    /* stop the sensor listener */
     public void stopAccelerometer() {
         mSensorManager.unregisterListener(this);
     }
 
-    //called whenever the accelerometer picks up any movement
+    /* called whenever the accelerometer picks up any movement */
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType()==Sensor.TYPE_LINEAR_ACCELERATION) {
@@ -290,7 +298,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    // Register the listener with the Location Manager to receive location updates
+    /* Register the listener with the Location Manager to receive location updates */
     public void startLocation() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -300,7 +308,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    // Remove the location listener to stop receiving location updates
+    /* Remove the location listener to stop receiving location updates */
     public void stopLocation() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -311,7 +319,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    // Called when a new location is found.
+    /* Called when location changes */
     @Override
     public void onLocationChanged(Location location) {
         double latitude = (double) (location.getLatitude());
