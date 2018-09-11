@@ -42,8 +42,9 @@
         app:layout_constraintTop_toTopOf="@id/longitude" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="123dp"
+        android:layout_height="52dp"
+        android:background="#FF009FAF"
         android:onClick="startGPS"
         android:text="start gps"
         android:textSize="20sp"
