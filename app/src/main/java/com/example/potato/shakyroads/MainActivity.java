@@ -158,19 +158,12 @@ public class MainActivity extends AppCompatActivity
         // the file object
         File file = new File(path, fileName);
 
-        if (isExternalStorageWritable() == true) {
+        if (isExternalStorageWritable()) {
             try {
                 // make sure the directory exists
                 path.mkdirs();
 
-                // check if the file exists
-                if(!file.exists()) {
-                    Log.e("saveFile", "failed to make file");
-                }
-                if (!file.mkdirs()) {
-                    Log.e("makeDirectory", "Directory not created");
-                }
-
+                // get an instance of CSVWriter
                 CSVWriter writer = new CSVWriter(
                         new OutputStreamWriter(new FileOutputStream(file),
                                 StandardCharsets.UTF_8), ',', '"', '"', "\n");
@@ -185,8 +178,10 @@ public class MainActivity extends AppCompatActivity
                 // then write it
                 writer.writeNext(entries);
                 writer.close();
+
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.e("holy", "crap");
             }
         } else {
             Log.e("saveFile", "storage not writeable");
