@@ -152,9 +152,10 @@ public class MainActivity extends AppCompatActivity
     public void saveData(double lat, double lng, double acc) {
 
         // filename and path to file
-        String fileName = "shakyroads.csv";
+        String fileName = "ShakyroadsData.csv";
         File path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS);
+
         // the file object
         File file = new File(path, fileName);
 
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity
                 // then write it
                 writer.writeNext(entries);
                 writer.close();
-
+                
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e("holy", "crap");
