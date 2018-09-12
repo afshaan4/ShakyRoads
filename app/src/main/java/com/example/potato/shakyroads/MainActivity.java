@@ -164,9 +164,9 @@ public class MainActivity extends AppCompatActivity
                 // make sure the directory exists
                 path.mkdirs();
 
-                // get an instance of CSVWriter
+                // get an instance of CSVWriter and tell it what file to write to
                 CSVWriter writer = new CSVWriter(
-                        new OutputStreamWriter(new FileOutputStream(file),
+                        new OutputStreamWriter(new FileOutputStream(file, true),
                                 StandardCharsets.UTF_8), ',', '"', '"', "\n");
 
                 // convert the data to strings
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity
                 // then write it
                 writer.writeNext(entries);
                 writer.close();
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e("holy", "crap");
