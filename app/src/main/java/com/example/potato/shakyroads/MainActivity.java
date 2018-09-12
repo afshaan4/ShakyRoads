@@ -150,24 +150,29 @@ public class MainActivity extends AppCompatActivity
 
     /* Writes the readings to a csv file */
     public void saveData(double lat, double lng, double acc) {
+
+        // filename and path to file
+        String fileName = "shakyroads.csv";
+        File path = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS);
+        // the file object
+        File file = new File(path, fileName);
+
         if (isExternalStorageWritable() == true) {
             try {
-                // check if the csv file exists, and make one if it doesn't
-                String fileName = "shakyroads.csv";
+                // make sure the directory exists
+                path.mkdirs();
 
-                File file = new File(mContext.getExternalFilesDir(
-                        Environment.DIRECTORY_DOCUMENTS), fileName);
+                // check if the file exists
                 if(!file.exists()) {
-                    Log.e("saveFile", "file not created");
+                    Log.e("saveFile", "failed to make file");
                 }
                 if (!file.mkdirs()) {
                     Log.e("makeDirectory", "Directory not created");
-                    file.mkdirs();
-                    // TODO make the directory instead of just complaining.
                 }
 
                 CSVWriter writer = new CSVWriter(
-                        new OutputStreamWriter(new FileOutputStream(fileName),
+                        new OutputStreamWriter(new FileOutputStream(file),
                                 StandardCharsets.UTF_8), ',', '"', '"', "\n");
 
                 // convert the data to strings
@@ -183,6 +188,9 @@ public class MainActivity extends AppCompatActivity
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            Log.e("saveFile", "storage not writeable");
+            // TODO ask for permission instead of just complaining
         }
     }
 
