@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* Writes the GPS and acceleration data to a csv file */
-    public void saveData(double lat, double lng, double acc) {
+    public void saveData(double lat, double lng, double accX, double accY, double accZ) {
 
         // filename and path to file
         String fileName = "ShakyroadsData.csv";
@@ -170,9 +170,11 @@ public class MainActivity extends AppCompatActivity
                 // convert the data to strings
                 String latitude = String.valueOf(lat);
                 String longitude = String.valueOf(lng);
-                String acceleration = String.valueOf(acc);
+                String X = String.valueOf(accX);
+                String Y = String.valueOf(accY);
+                String Z = String.valueOf(accZ);
                 // then to an array of strings
-                String[] entries = new String[] {latitude, longitude, acceleration};
+                String[] entries = new String[] {latitude, longitude, X, Y, Z};
 
                 // then write it
                 writer.writeNext(entries);
@@ -214,7 +216,7 @@ public class MainActivity extends AppCompatActivity
 
             displayAcceleration(y);
 
-            saveData(0, 0, y);
+            saveData(0, 0, x, y, z);
         }
     }
 
@@ -333,7 +335,7 @@ public class MainActivity extends AppCompatActivity
         displayLong(longitude);
         displayLat(latitude);
 
-        saveData(latitude, longitude, 0);
+        saveData(latitude, longitude, 0, 0, 0);
     }
 
     // these are not used, leave them here
