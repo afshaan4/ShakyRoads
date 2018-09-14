@@ -33,9 +33,7 @@ import com.opencsv.CSVWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 
 import static java.lang.String.valueOf;
@@ -139,7 +137,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /* Checks if external storage is available for read and write */
+    /* Checks if external storage is writeable */
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -148,7 +146,7 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
-    /* Writes the readings to a csv file */
+    /* Writes the GPS and acceleration data to a csv file */
     public void saveData(double lat, double lng, double acc) {
 
         // filename and path to file
@@ -156,7 +154,7 @@ public class MainActivity extends AppCompatActivity
         File path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS);
 
-        // the file object
+        // make the file object
         File file = new File(path, fileName);
 
         if (isExternalStorageWritable()) {
@@ -182,7 +180,7 @@ public class MainActivity extends AppCompatActivity
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e("holy", "crap");
+                Log.e("holy crap", "FileOutputStream threw an IOException");
             }
         } else {
             Log.e("saveFile", "storage not writeable");
@@ -334,6 +332,8 @@ public class MainActivity extends AppCompatActivity
 
         displayLong(longitude);
         displayLat(latitude);
+
+        saveData(latitude, longitude, 0);
     }
 
     // these are not used, leave them here
