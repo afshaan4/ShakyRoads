@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity
 
 
     private SensorManager mSensorManager;
-    private LocationManager mLocationManager;
     private Sensor mAccelerometer;
+    private double accThresh = 2; // the threshold used to filter out small vibrations
+    private LocationManager mLocationManager;
     private Context mContext;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
@@ -137,6 +138,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// saving the data
+////////////////////////////////////////////////////////////////////////////////////////////////////
     /* Checks if external storage is writeable */
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
@@ -216,7 +220,10 @@ public class MainActivity extends AppCompatActivity
 
             displayAcceleration(y);
 
-            saveData(0, 0, x, y, z);
+            // only save if we get significant vibrations
+            if (x >= accThresh || y >= accThresh || z >= accThresh) {
+                saveData(0, 0, x, y, z);
+            }
         }
     }
 
