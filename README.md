@@ -7,7 +7,8 @@ and dumps those readings to a csv file, then using that data you can make a map 
 
 ### TODO
 
-- [ ] tell the use when GPS signal is weak
+- [ ] tell the user when GPS signal is weak
+- [ ] add a calibration step for the accelerometer (since the app uses androids linear accelerometer)
 - [ ] plot acceleration readings onto a map
 - [ ] allow installing the app on external storage
 - [x] dump readings to a csv file

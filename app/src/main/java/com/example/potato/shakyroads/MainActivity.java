@@ -45,10 +45,14 @@ public class MainActivity extends AppCompatActivity
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-    private double accThresh = 2; // the threshold used to filter out small vibrations
     private LocationManager mLocationManager;
     private Context mContext;
+
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private double accThresh = 2; // the threshold used to filter out small vibrations
+    private double Globx;
+    private double Globy;
+    private double Globz;
 
 
     @Override
@@ -139,7 +143,7 @@ public class MainActivity extends AppCompatActivity
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// saving the data
+// stuff that saves the data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     /* Checks if external storage is writeable */
     public boolean isExternalStorageWritable() {
@@ -189,7 +193,7 @@ public class MainActivity extends AppCompatActivity
                 Log.e("holy crap", "FileOutputStream threw an IOException");
             }
         } else {
-            Log.e("saveFile", "storage not writeable");
+            Log.e("saveFile", "storage not writeable, you probably don't have the permissions");
             // TODO ask for permission instead of just complaining
         }
     }
@@ -221,8 +225,11 @@ public class MainActivity extends AppCompatActivity
             displayAcceleration(y);
 
             // only save if we get significant vibrations
-            if (x >= accThresh || y >= accThresh || z >= accThresh) {
-                saveData(0, 0, x, y, z);
+            if (Math.abs(x) >= accThresh || Math.abs(y) >= accThresh || Math.abs(z) >= accThresh) {
+                //saveData(0, 0, x, y, z);
+                Globx = x;
+                Globy = y;
+                Globz = z;
             }
         }
     }
@@ -318,7 +325,8 @@ public class MainActivity extends AppCompatActivity
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
 
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            // minTime: milliseconds, minDistance: meters
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
         }
     }
 
@@ -342,7 +350,7 @@ public class MainActivity extends AppCompatActivity
         displayLong(longitude);
         displayLat(latitude);
 
-        saveData(latitude, longitude, 0, 0, 0);
+        saveData(latitude, longitude, Globx, Globy, Globz);
     }
 
     // these are not used, leave them here
