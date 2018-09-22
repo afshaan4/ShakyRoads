@@ -49,11 +49,7 @@ public class MainActivity extends AppCompatActivity
     private Context mContext;
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    private double accThresh = 2; // the threshold used to filter out small vibrations
-    private double Globx;
-    private double Globy;
-    private double Globz;
-
+    private double accThresh = 2; // acceleration threshold used to filter out noise
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,10 +222,7 @@ public class MainActivity extends AppCompatActivity
 
             // only save if we get significant vibrations
             if (Math.abs(x) >= accThresh || Math.abs(y) >= accThresh || Math.abs(z) >= accThresh) {
-                //saveData(0, 0, x, y, z);
-                Globx = x;
-                Globy = y;
-                Globz = z;
+                saveData(0, 0, x, y, z);
             }
         }
     }
@@ -350,7 +343,7 @@ public class MainActivity extends AppCompatActivity
         displayLong(longitude);
         displayLat(latitude);
 
-        saveData(latitude, longitude, Globx, Globy, Globz);
+        saveData(latitude, longitude, 0, 0, 0);
     }
 
     // these are not used, leave them here
