@@ -50,6 +50,12 @@ public class MainActivity extends AppCompatActivity
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private double accThresh = 5; // acceleration threshold used to filter out noise
+    // vars to hold the readings
+    double globX = 0;
+    double globY = 0;
+    double globZ = 0;
+    double globLat = 0;
+    double globLng = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +147,7 @@ public class MainActivity extends AppCompatActivity
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // stuff that saves the data
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-    /* Checks if external storage is writeable */
+    /* checks if external storage is writeable */
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -150,7 +156,7 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
-    /* Writes the GPS and acceleration data to a csv file */
+    /* writes the GPS and acceleration data to a csv file */
     public void saveData(double lat, double lng, double accX, double accY, double accZ) {
 
         // filename and path to file
@@ -222,7 +228,8 @@ public class MainActivity extends AppCompatActivity
 
             // only save if we get significant vibrations
             if (Math.abs(x) >= accThresh || Math.abs(y) >= accThresh || Math.abs(z) >= accThresh) {
-                saveData(0, 0, x, y, z);
+                globX = x; globY = y; globZ = z;
+                saveData(globLat, globLng, globX, globY, globZ);
             }
         }
     }
@@ -319,7 +326,7 @@ public class MainActivity extends AppCompatActivity
                 == PackageManager.PERMISSION_GRANTED) {
 
             // minTime: milliseconds, minDistance: meters
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, this);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10*1000, 5, this);
         }
     }
 
@@ -342,8 +349,9 @@ public class MainActivity extends AppCompatActivity
 
         displayLong(longitude);
         displayLat(latitude);
+        globLat = latitude; globLng = longitude;
 
-        saveData(latitude, longitude, 0, 0, 0);
+        saveData(globLat, globLng, globX, globY, globZ);
     }
 
     // these are not used, leave them here
