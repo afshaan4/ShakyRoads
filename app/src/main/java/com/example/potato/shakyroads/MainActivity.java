@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity
                 == PackageManager.PERMISSION_GRANTED) {
 
             // minTime: milliseconds, minDistance: meters
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, this);
         }
     }
 
