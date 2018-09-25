@@ -7,6 +7,7 @@ and dumps those readings to a csv file, then using that data you can make a map 
 
 ### TODO
 
+- [ ] save new acceleration readings only on location changes
 - [ ] tell the user when GPS signal is weak
 - [ ] add a calibration step for the accelerometer (since the app uses androids linear accelerometer)
 - [ ] plot acceleration readings onto a map
