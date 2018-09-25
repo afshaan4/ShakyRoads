@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
     private Context mContext;
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    private double accThresh = 2; // acceleration threshold used to filter out noise
+    private double accThresh = 5; // acceleration threshold used to filter out noise
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
