@@ -1,7 +1,7 @@
 # Shaky Roads [WIP]
 
-This code uses your phones accelerometer and GPS to measure movement and your location
-and dumps those readings to a csv file, then using that data you can make a map of road quality.
+An app to record road quality, so here's the idea: read the accelerometer and GPS then save them to
+a csv then you can plot the acceleration readings to a map or make pretty graphs and all that.
 
 **Note:** It takes a while after you turn on your phones GPS till it displays your latitude and longitude.
 
@@ -11,6 +11,6 @@ and dumps those readings to a csv file, then using that data you can make a map 
 - [ ] tell the user when GPS signal is weak
 - [ ] add a calibration step for the accelerometer (since the app uses androids linear accelerometer)
 - [ ] plot acceleration readings onto a map
-- [ ] allow installing the app on external storage
+- [x] allow installing the app on external storage
 - [x] dump readings to a csv file
 - [x] Get the GPS to work

@@ -354,7 +354,7 @@ public class MainActivity extends AppCompatActivity
         saveData(globLat, globLng, globX, globY, globZ);
     }
 
-    // these are not used, leave them here
+    // these are not used yet, leave them here
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
 
