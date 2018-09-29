@@ -3,6 +3,7 @@ package com.example.potato.shakyroads;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -29,6 +30,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.widget.TextView;
 import android.Manifest;
+import android.widget.Toast;
+
 import com.opencsv.CSVWriter;
 
 import java.io.File;
@@ -142,7 +145,6 @@ public class MainActivity extends AppCompatActivity
         checkLocationPermission();
         startLocation();
     }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // stuff that saves the data
@@ -362,7 +364,11 @@ public class MainActivity extends AppCompatActivity
     public void onProviderEnabled(String provider) {}
 
     @Override
-    public void onProviderDisabled(String provider) {}
+    public void onProviderDisabled(String provider) {
+        // tell the user when the location provider is disabled
+        stopLocation();
+        Toast.makeText(mContext, "GPS disabled", Toast.LENGTH_SHORT).show();
+    }
 
 
 
