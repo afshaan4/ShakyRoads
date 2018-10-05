@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity
     public void onProviderDisabled(String provider) {
         // tell the user when the location provider is disabled
         stopLocation();
-        Toast.makeText(mContext, "GPS disabled", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "GPS disabled", Toast.LENGTH_LONG).show();
     }
 
 
