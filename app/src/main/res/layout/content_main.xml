@@ -46,7 +46,7 @@
         android:layout_height="52dp"
         android:background="#FF009FAF"
         android:onClick="startGPS"
-        android:text="start gps"
+        android:text="start reading"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
