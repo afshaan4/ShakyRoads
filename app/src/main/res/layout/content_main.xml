@@ -41,16 +41,4 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/longitude" />
 
-    <Button
-        android:layout_width="123dp"
-        android:layout_height="52dp"
-        android:background="#FF009FAF"
-        android:onClick="startGPS"
-        android:text="start reading"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/latitude" />
-
 </android.support.constraint.ConstraintLayout>

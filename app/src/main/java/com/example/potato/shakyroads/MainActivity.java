@@ -71,7 +71,12 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "This button does nothing", Snackbar.LENGTH_LONG)
+                if (checkLocationPermission()) {
+                    startLocation();
+                } else {
+                    stopLocation();
+                }
+                Snackbar.make(view, "Getting location", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -140,11 +145,6 @@ public class MainActivity extends AppCompatActivity
         display.setText(valueOf(location));
     }
 
-    /* gets the gps permission if we don't have it, if it has the permission: start the GPS */
-    public void startGPS(View view) {
-        checkLocationPermission();
-        startLocation();
-    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // stuff that saves the data
