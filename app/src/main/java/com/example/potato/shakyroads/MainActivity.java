@@ -3,7 +3,6 @@ package com.example.potato.shakyroads;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -54,11 +53,13 @@ public class MainActivity extends AppCompatActivity
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private double accThresh = 5; // acceleration threshold used to filter out noise
     // vars to hold the readings
-    double globX = 0;
-    double globY = 0;
-    double globZ = 0;
-    double globLat = 0;
-    double globLng = 0;
+    private double globX = 0;
+    private double globY = 0;
+    private double globZ = 0;
+    private double globLat = 0;
+    private double globLng = 0;
+    // stores the state of the button to start getting location updates
+    private int isButtonPressed = 0; // 0 = off, 1 = on
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +68,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /*Button to start reading from the GPS*/
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // switch the state of the button
+                isButtonPressed = 1 - isButtonPressed; // math tricks: 1 - 0 = 1 | 1 - 1 = 0.
+
                 if (checkLocationPermission()) {
                     startLocation();
                 } else {
@@ -93,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         // get instances of SensorManager
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        // get and instance of the linear motion accelerometer
+        // get an instance of the linear motion accelerometer
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         // get an instance of LocationManager
@@ -108,8 +113,15 @@ public class MainActivity extends AppCompatActivity
 
         // Start the reading from the accelerometer
         startAccelerometer();
-        // start getting location updates
-        startLocation();
+
+        // start getting location updates if the button was pressed
+        if (isButtonPressed == 1) {
+            startLocation();
+            Log.d("resuming", "button pressed");
+        } else {
+            stopLocation();
+            Log.d("resuming", "button NOT pressed");
+        }
     }
 
     /* when the activity pauses */
@@ -174,7 +186,7 @@ public class MainActivity extends AppCompatActivity
                 // make sure the directory exists
                 path.mkdirs();
 
-                // get an instance of CSVWriter and tell it what file to write to
+                // get an instance of CSVWriter
                 CSVWriter writer = new CSVWriter(
                         new OutputStreamWriter(new FileOutputStream(file, true),
                                 StandardCharsets.UTF_8), ',', '"', '"', "\n");
@@ -197,7 +209,7 @@ public class MainActivity extends AppCompatActivity
                 Log.e("holy crap", "FileOutputStream threw an IOException");
             }
         } else {
-            Log.e("saveFile", "storage not writeable, you probably don't have the permissions");
+            Log.e("saveFile", "storage not writeable, you probably don't have the privs");
             // TODO ask for permission instead of just complaining
         }
     }

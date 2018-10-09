@@ -7,10 +7,11 @@ a csv then you can plot the acceleration readings to a map or make pretty graphs
 
 ### TODO
 
-- [ ] save new acceleration readings only on location changes, and have the save
+- [ ] save new readings only on location changes, and have the save
       function only save when the location data != 0
 - [ ] add a calibration step for the accelerometer (since the app uses androids linear accelerometer)
-- [ ] plot acceleration readings onto a map
+- [ ] plot acceleration readings onto a map, and other UI stuff
+- [ ] make the save function save asynchronously or save to a buffer then to the file
 - [x] tell the user when GPS is disabled
 - [x] allow installing the app on external storage
 - [x] dump readings to a csv file
