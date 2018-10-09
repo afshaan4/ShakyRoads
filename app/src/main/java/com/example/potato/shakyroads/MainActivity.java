@@ -75,14 +75,15 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 // switch the state of the button
                 isButtonPressed = 1 - isButtonPressed; // math tricks: 1 - 0 = 1 | 1 - 1 = 0.
+                // I gotta have *some* feedback
+                Snackbar.make(view, String.valueOf(isButtonPressed), Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
 
                 if (checkLocationPermission()) {
                     startLocation();
                 } else {
                     stopLocation();
                 }
-                Snackbar.make(view, "Getting location", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 
