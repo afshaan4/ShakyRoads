@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity
             // only save if we get significant vibrations
             if (Math.abs(x) >= accThresh || Math.abs(y) >= accThresh || Math.abs(z) >= accThresh) {
                 globX = x; globY = y; globZ = z;
-                saveData(globLat, globLng, globX, globY, globZ);
+                //saveData(globLat, globLng, globX, globY, globZ);
             }
         }
     }
@@ -341,7 +341,7 @@ public class MainActivity extends AppCompatActivity
                 == PackageManager.PERMISSION_GRANTED) {
 
             // minTime: milliseconds, minDistance: meters
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10*1000, 5, this);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1*1000, 2, this);
         }
     }
 
