@@ -1,7 +1,6 @@
 package com.example.potato.shakyroads
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
@@ -38,7 +37,6 @@ import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 
-import java.lang.String.valueOf
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, SensorEventListener, LocationListener {
@@ -47,7 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var mSensorManager: SensorManager? = null
     private var mAccelerometer: Sensor? = null
     private var mLocationManager: LocationManager? = null
-    private val mContext: Context? = null
+    private val myPermissionRequestLocation = 99
     private val accThresh = 5.0 // acceleration threshold used to filter out noise
     // vars to hold the readings
     private var globX = 0.0
@@ -134,19 +132,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     Display functions for testing.
      */
     /* displays the reading */
-    fun displayAcceleration(acceleration: Double) {
+    private fun displayAcceleration(acceleration: Double) {
         val display = findViewById<View>(R.id.reading) as TextView
         display.text = acceleration.toString()
     }
 
     /* displays the longitude */
-    fun displayLong(location: Double) {
+    private fun displayLong(location: Double) {
         val display = findViewById<View>(R.id.longitude) as TextView
         display.text = location.toString()
     }
 
     /* displays the latitude */
-    fun displayLat(location: Double) {
+    private fun displayLat(location: Double) {
         val display = findViewById<View>(R.id.latitude) as TextView
         display.text = location.toString()
     }
@@ -159,10 +157,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         get() {
             val state = Environment.getExternalStorageState()
             return Environment.MEDIA_MOUNTED == state
-            //TODO this shit might fail
         }
+
     /* writes the GPS and acceleration data to a csv file */
-    fun saveData(lat: Double, lng: Double, accX: Double, accY: Double, accZ: Double) {
+    private fun saveData(lat: Double, lng: Double, accX: Double, accY: Double, accZ: Double) {
 
         // filename and path to file
         val fileName = "ShakyroadsData.csv"
@@ -212,12 +210,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /* start the sensor listener */
-    fun startAccelerometer() {
+    private fun startAccelerometer() {
         mSensorManager!!.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     /* stop the sensor listener */
-    fun stopAccelerometer() {
+    private fun stopAccelerometer() {
         mSensorManager!!.unregisterListener(this)
     }
 
@@ -253,7 +251,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     the permissions then it shows the user a dialog asking for the permission.
     Returns true or false depending on whether it has the permission or not
      */
-    fun checkLocationPermission(): Boolean {
+    private fun checkLocationPermission(): Boolean {
         if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -268,10 +266,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         .setTitle(R.string.title_location_permission)
                         .setMessage(R.string.text_location_permission)
                         .setPositiveButton(R.string.ok) { dialogInterface, i ->
-                            //Prompt the user once explanation has been shown, used to be MainActivity.this
+                            //Prompt the user once explanation has been shown
                             ActivityCompat.requestPermissions(this@MainActivity,
                                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                                    MY_PERMISSIONS_REQUEST_LOCATION)
+                                    myPermissionRequestLocation)
                         }
                         .create()
                         .show()
@@ -280,7 +278,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        MY_PERMISSIONS_REQUEST_LOCATION)
+                        myPermissionRequestLocation)
             }
             return false
         } else {
@@ -296,9 +294,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            MY_PERMISSIONS_REQUEST_LOCATION -> {
+            myPermissionRequestLocation -> {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, do the location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -318,7 +316,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     /* Register the listener with the Location Manager to receive location updates */
-    fun startLocation() {
+    private fun startLocation() {
         if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -328,7 +326,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     /* Remove the location listener to stop receiving location updates */
-    fun stopLocation() {
+    private fun stopLocation() {
         if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -398,28 +396,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         val id = item.itemId
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        when (id) {
+            R.id.nav_camera -> {
+                // Handle the camera action
+            }
+            R.id.nav_gallery -> {
 
-        } else if (id == R.id.nav_slideshow) {
+            }
+            R.id.nav_slideshow -> {
 
-        } else if (id == R.id.nav_manage) {
+            }
+            R.id.nav_manage -> {
 
-        } else if (id == R.id.nav_share) {
+            }
+            R.id.nav_share -> {
 
-        } else if (id == R.id.nav_send) {
+            }
+            R.id.nav_send -> {
 
+            }
         }
 
         val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    companion object {
-
-        val MY_PERMISSIONS_REQUEST_LOCATION = 99
     }
 
 }
