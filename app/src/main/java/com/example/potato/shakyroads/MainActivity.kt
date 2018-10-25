@@ -228,13 +228,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             displayAcceleration(y)
 
-            // only save if we get significant vibrations
-            if (Math.abs(x) >= accThresh || Math.abs(y) >= accThresh || Math.abs(z) >= accThresh) {
-                globX = x
-                globY = y
-                globZ = z
-                //saveData(globLat, globLng, globX, globY, globZ);
-            }
+            // update the vals
+            globX = x; globY = y; globZ = z
         }
     }
 
