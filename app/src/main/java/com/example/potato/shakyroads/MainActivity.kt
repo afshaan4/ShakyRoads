@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var mAccelerometer: Sensor? = null
     private var mLocationManager: LocationManager? = null
     private val myPermissionRequestLocation = 99
-    private val accThresh = 5.0 // acceleration threshold used to filter out noise
     // vars to hold the readings
     private var globX = 0.0
     private var globY = 0.0
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var globLng = 0.0
     // stores the state of the button to start getting location updates
     private var isButtonPressed = 0 // 0 = off, 1 = on
-
+    // TODO: https://kotlinlang.org/docs/reference/properties.html
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -160,8 +159,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
     /* writes the GPS and acceleration data to a csv file */
-    private fun saveData(lat: Double, lng: Double, accX: Double, accY: Double, accZ: Double) {
-
+    private fun saveData(accX: Double, accY: Double, accZ: Double, lat: Double, lng: Double) {
         // filename and path to file
         val fileName = "ShakyroadsData.csv"
         val path = Environment.getExternalStoragePublicDirectory(
@@ -337,10 +335,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         displayLong(longitude)
         displayLat(latitude)
-        globLat = latitude
-        globLng = longitude
 
-        saveData(globLat, globLng, globX, globY, globZ)
+        globLat = latitude; globLng = longitude
+        saveData(globX, globY, globZ, globLat, globLng)
     }
 
     // these are not used yet, leave them here
