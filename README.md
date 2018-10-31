@@ -8,9 +8,9 @@ a csv then you can plot the acceleration readings to a map or make pretty graphs
 ### TODO
 
 - [ ] add a calibration step for the accelerometer (since the app uses androids linear accelerometer)
-- [x] kotlin not java
 - [ ] plot acceleration readings onto a map, and other UI stuff
-- [ ] make the save function save asynchronously or save to a buffer then to the file
+- [ ] make the save function save asynchronously
+- [x] kotlin not java
 - [x] save new readings only when location changes
 - [x] tell the user when GPS is disabled
 - [x] allow installing the app on external storage

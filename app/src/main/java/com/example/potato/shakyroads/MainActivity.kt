@@ -47,13 +47,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var mLocationManager: LocationManager? = null
     private val myPermissionRequestLocation = 99
     // vars to hold the readings
-    private var globX = 0.0
-    private var globY = 0.0
-    private var globZ = 0.0
-    private var globLat = 0.0
-    private var globLng = 0.0
+    private var globX: Double = 0.0
+    private var globY: Double = 0.0
+    private var globZ: Double = 0.0
+    private var globLat: Double = 0.0x
+    private var globLng: Double = 0.0
     // stores the state of the button to start getting location updates
-    private var isButtonPressed = 0 // 0 = off, 1 = on
+    private var isButtonPressed: Int = 0 // 0 = off, 1 = on
     // TODO: https://kotlinlang.org/docs/reference/properties.html
 
 
