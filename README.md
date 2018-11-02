@@ -3,13 +3,15 @@
 An app to record road quality, so here's the idea: read the accelerometer and GPS then save them to
 a csv then you can plot the acceleration readings to a map or make pretty graphs and all that.
 
-**Note:** It takes a while after you turn on your phones GPS till it displays your latitude and longitude.
+**Note:** It takes a while after you turn on your phones GPS till it gets your location
+
 
 ### TODO
 
 - [ ] add a calibration step for the accelerometer (since the app uses androids linear accelerometer)
 - [ ] plot acceleration readings onto a map, and other UI stuff
 - [ ] make the save function save asynchronously
+- [ ] allow the app to run in the background
 - [x] kotlin not java
 - [x] save new readings only when location changes
 - [x] tell the user when GPS is disabled

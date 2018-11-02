@@ -38,7 +38,6 @@ import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 
 
-
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, SensorEventListener, LocationListener {
 
 
@@ -50,11 +49,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var globX: Double = 0.0
     private var globY: Double = 0.0
     private var globZ: Double = 0.0
-    private var globLat: Double = 0.0x
+    private var globLat: Double = 0.0
     private var globLng: Double = 0.0
-    // stores the state of the button to start getting location updates
+    // stores the state of the button that toggles location
     private var isButtonPressed: Int = 0 // 0 = off, 1 = on
-    // TODO: https://kotlinlang.org/docs/reference/properties.html
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +61,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        /*Button to start reading from the GPS*/
+        /*Button to toggle GPS*/
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
             // switch the state of the button
@@ -72,7 +70,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Snackbar.make(view, isButtonPressed.toString(), Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show()
 
-            if (checkLocationPermission()) {
+            if (checkLocationPermission() && isButtonPressed == 1) {
                 startLocation()
             } else {
                 stopLocation()
@@ -88,7 +86,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView = findViewById<View>(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
-        // get instances of SensorManager
+        // get an instance of SensorManager
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         // get an instance of the linear motion accelerometer
@@ -120,7 +118,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onPause() {
         super.onPause()
 
-        // When the activity is paused, we make sure to release our sensor resources
+        // release the sensor resources
         stopAccelerometer()
         // stop the location listeners
         stopLocation()
@@ -293,14 +291,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     // permission was granted, do the location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-                        //Request location updates:
-                        startLocation()
+                        if (isButtonPressed == 1) {
+                            //Request location updates:
+                            startLocation()
+                        }
                     }
-
                 } else {
-
-                    // TODO: disable the thing that depends on this permission.
+                    // TODO: disable the GPS, add an obvious UI change like change the buttons icon.
+                    stopLocation()
                 }
                 return
             }
