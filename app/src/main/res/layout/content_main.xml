@@ -9,13 +9,38 @@
     tools:showIn="@layout/app_bar_main">
 
     <TextView
-        android:id="@+id/reading"
+        android:id="@+id/X"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:text="0"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="@id/longitude"
+        app:layout_constraintHorizontal_bias="0.056"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/Y"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="0"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="@id/longitude"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintLeft_toLeftOf="@id/X"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/Z"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="0"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="@id/longitude"
+        app:layout_constraintHorizontal_bias="0.898"
+        app:layout_constraintLeft_toLeftOf="@id/Y"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,7 +48,7 @@
         android:id="@+id/longitude"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="0"
+        android:text="Lat"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -34,7 +59,7 @@
         android:id="@+id/latitude"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="0"
+        android:text="Long"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

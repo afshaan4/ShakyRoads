@@ -128,9 +128,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     /*
     Display functions for testing.
      */
-    /* displays the reading */
-    private fun displayAcceleration(acceleration: Double) {
-        val display = findViewById<View>(R.id.reading) as TextView
+
+    private fun displayX(acceleration: Double) {
+        val display = findViewById<View>(R.id.X) as TextView
+        display.text = acceleration.toString()
+    }
+
+    private fun displayY(acceleration: Double) {
+        val display = findViewById<View>(R.id.Y) as TextView
+        display.text = acceleration.toString()
+    }
+
+    private fun displayZ(acceleration: Double) {
+        val display = findViewById<View>(R.id.Z) as TextView
         display.text = acceleration.toString()
     }
 
@@ -179,11 +189,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 // convert the data to strings
                 val latitude = lat.toString()
                 val longitude = lng.toString()
-                val X = accX.toString()
-                val Y = accY.toString()
-                val Z = accZ.toString()
+                val x = accX.toString()
+                val y = accY.toString()
+                val z = accZ.toString()
                 // then to an array of strings
-                val entries = arrayOf(latitude, longitude, X, Y, Z)
+                val entries = arrayOf(latitude, longitude, x, y, z)
 
                 // then write it
                 writer.writeNext(entries)
@@ -222,7 +232,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val y = event.values[1].toDouble()
             val z = event.values[2].toDouble()
 
-            displayAcceleration(y)
+            displayX(x); displayY(y); displayZ(z)
 
             // update the vals
             globX = x; globY = y; globZ = z
