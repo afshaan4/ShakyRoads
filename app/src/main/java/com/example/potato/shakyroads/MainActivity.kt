@@ -234,7 +234,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             displayX(x); displayY(y); displayZ(z)
 
-            // update the vals
+            // update the vars
             globX = x; globY = y; globZ = z
         }
     }
