@@ -38,7 +38,8 @@ import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, SensorEventListener, LocationListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+        SensorEventListener, LocationListener {
 
 
     private var mSensorManager: SensorManager? = null
@@ -66,6 +67,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fab.setOnClickListener { view ->
             // switch the state of the button
             isButtonPressed = 1 - isButtonPressed // math tricks: 1 - 0 = 1 | 1 - 1 = 0.
+            // TODO: make this a toggle button
             // I gotta have *some* feedback
             Snackbar.make(view, isButtonPressed.toString(), Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show()
@@ -156,9 +158,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         display.text = location.toString()
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // stuff that saves the data
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     /* checks if external storage is writeable */
     private val isExternalStorageWritable: Boolean
         get() {
@@ -253,8 +255,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     Returns true or false depending on whether it has the permission or not
      */
     private fun checkLocationPermission(): Boolean {
-        if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -318,18 +320,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     /* Register the listener with the Location Manager to receive location updates */
     private fun startLocation() {
-        if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
 
             // minTime: milliseconds, minDistance: meters
-            mLocationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, (1 * 1000).toLong(), 2f, this)
+            mLocationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    (1 * 1000).toLong(), 2f, this)
         }
     }
 
     /* Remove the location listener to stop receiving location updates */
     private fun stopLocation() {
-        if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
 
             mLocationManager!!.removeUpdates(this)
         }
