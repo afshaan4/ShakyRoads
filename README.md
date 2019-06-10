@@ -12,6 +12,7 @@ Uses androids [linear accelerometer](https://developer.android.com/guide/topics/
 
 - [ ] allow user to change sensitivity threshold
 - [ ] separate UI logic and sensor logic, so MainActivity stays small
+- [ ] finding the logged file is a pain, somehow make it better
 - [ ] add a calibration step for the accelerometer (since the app uses the "linear accelerometer")
 - [ ] plot acceleration readings onto a map, and other UI stuff
 - [x] kotlin not java

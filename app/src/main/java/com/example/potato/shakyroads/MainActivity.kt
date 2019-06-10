@@ -126,36 +126,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         stopLocation()
     }
 
-
-    /*
-    Display functions for testing.
-     */
-
-    private fun displayX(acceleration: Double) {
-        val display = findViewById<View>(R.id.X) as TextView
-        display.text = acceleration.toString()
-    }
-
-    private fun displayY(acceleration: Double) {
-        val display = findViewById<View>(R.id.Y) as TextView
-        display.text = acceleration.toString()
-    }
-
-    private fun displayZ(acceleration: Double) {
-        val display = findViewById<View>(R.id.Z) as TextView
-        display.text = acceleration.toString()
-    }
-
-    /* displays the longitude */
-    private fun displayLong(location: Double) {
-        val display = findViewById<View>(R.id.longitude) as TextView
-        display.text = location.toString()
-    }
-
-    /* displays the latitude */
-    private fun displayLat(location: Double) {
-        val display = findViewById<View>(R.id.latitude) as TextView
-        display.text = location.toString()
+    /* used to display stuff */
+    private fun display(data: Double, viewId: Int) {
+        val display = findViewById<View>(viewId) as TextView
+        display.text = data.toString()
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +181,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
         } else {
-            Log.e("saveFile", "storage not writeable, you probably don't have the privs")
+            Log.e("saveFile", "storage not writable, you probably don't have the privs")
             // TODO ask for permission instead of just complaining
         }
     }
@@ -234,10 +208,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val y = event.values[1].toDouble()
             val z = event.values[2].toDouble()
 
-            displayX(x); displayY(y); displayZ(z)
+            display(x, R.id.X)
+            display(y, R.id.Y)
+            display(z, R.id.Z)
 
-            // update the vars
-            globX = x; globY = y; globZ = z
+            globX = x
+            globY = y
+            globZ = z
         }
     }
 
@@ -344,8 +321,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val latitude = location.latitude
         val longitude = location.longitude
 
-        displayLong(longitude)
-        displayLat(latitude)
+        display(longitude, R.id.latitude)
+        display(latitude, R.id.longitude)
 
         globLat = latitude; globLng = longitude
         saveData(globX, globY, globZ, globLat, globLng)
