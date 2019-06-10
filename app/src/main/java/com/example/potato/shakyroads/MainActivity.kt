@@ -28,6 +28,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.widget.TextView
 import android.Manifest
+import android.content.Intent
 import android.widget.Toast
 
 import com.opencsv.CSVWriter
@@ -376,13 +377,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         when (id) {
             R.id.nav_camera -> {
-                // Handle the camera action
+
             }
             R.id.nav_gallery -> {
 
             }
             R.id.nav_settings -> {
-
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_share -> {
 

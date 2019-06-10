@@ -14,9 +14,4 @@ Uses androids [linear accelerometer](https://developer.android.com/guide/topics/
 - [ ] finding the logged file is a pain, somehow make it better
 - [ ] add a calibration step for the accelerometer (since the app uses the "linear accelerometer")
 - [ ] plot acceleration readings onto a map, and other UI stuff
-- [x] kotlin not java
-- [x] save new readings only when location changes
-- [x] tell the user when GPS is disabled
-- [x] allow installing the app on external storage
-- [x] dump readings to a csv file
-- [x] Get the GPS to work
+
