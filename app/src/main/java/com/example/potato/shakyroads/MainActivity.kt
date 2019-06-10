@@ -50,8 +50,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var globX: Double = 0.0
     private var globY: Double = 0.0
     private var globZ: Double = 0.0
-    private var globLat: Double = 0.0
-    private var globLng: Double = 0.0
     // stores the state of the button that toggles location
     private var isButtonPressed: Int = 0 // 0 = off, 1 = on
 
@@ -66,7 +64,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
             // switch the state of the button
-            isButtonPressed = 1 - isButtonPressed // math tricks: 1 - 0 = 1 | 1 - 1 = 0.
+            isButtonPressed = 1 - isButtonPressed // math tricks: 1 - 0 = 1 and 1 - 1 = 0.
             // TODO: make this a toggle button
             // I gotta have *some* feedback
             Snackbar.make(view, isButtonPressed.toString(), Snackbar.LENGTH_SHORT)
@@ -79,7 +77,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        val drawer = findViewById<View>(R.id.drawer_layout) as androidx.drawerlayout.widget.DrawerLayout
+        val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
@@ -245,7 +243,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 AlertDialog.Builder(this)
                         .setTitle(R.string.title_location_permission)
                         .setMessage(R.string.text_location_permission)
-                        .setPositiveButton(R.string.ok) { dialogInterface, i ->
+                        .setPositiveButton(R.string.ok) { _, _ ->
                             //Prompt the user once explanation has been shown
                             ActivityCompat.requestPermissions(this@MainActivity,
                                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
@@ -324,8 +322,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         display(longitude, R.id.latitude)
         display(latitude, R.id.longitude)
 
-        globLat = latitude; globLng = longitude
-        saveData(globX, globY, globZ, globLat, globLng)
+        // only save on gps updates
+        saveData(globX, globY, globZ, latitude, longitude)
     }
 
     // these are not used yet, leave them here
@@ -344,7 +342,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //The UI functions and handlers
     ////////////////////////////////////////////////////////////////////////////////////////////////
     override fun onBackPressed() {
-        val drawer = findViewById<View>(R.id.drawer_layout) as androidx.drawerlayout.widget.DrawerLayout
+        val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
         } else {
@@ -394,7 +392,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        val drawer = findViewById<View>(R.id.drawer_layout) as androidx.drawerlayout.widget.DrawerLayout
+        val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         return true
     }

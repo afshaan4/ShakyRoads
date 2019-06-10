@@ -5,9 +5,9 @@
         app:key="replaceme"
         app:title="do not click"/>
 
-    <Preference
-        app:key="wot"
-        app:title="title"
-        app:summary="does nothing"/>
+    <EditTextPreference
+        app:key="sensitivity"
+        app:title="accelerometer threshold"/>
+
 
 </PreferenceScreen>
