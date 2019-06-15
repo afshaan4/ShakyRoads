@@ -61,21 +61,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        /*Button to toggle GPS*/
+        /*Button to toggle the logger*/
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
             // switch the state of the button
             isButtonPressed = 1 - isButtonPressed // math tricks: 1 - 0 = 1 and 1 - 1 = 0.
-            // TODO: make this a toggle button
-            // I gotta have *some* feedback
+            // TODO: change the button icon rather than showing a SnackBar
             Snackbar.make(view, isButtonPressed.toString(), Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show()
-
-            if (checkLocationPermission() && isButtonPressed == 1) {
-                startLocation()
-            } else {
-                stopLocation()
-            }
+            checkLocationPermission()
         }
 
         val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
@@ -101,27 +95,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     /* when the activity resumes */
     override fun onResume() {
         super.onResume()
-
-        // Start the reading from the accelerometer
+        // resume reading from the sensors
         startAccelerometer()
-
-        // start getting location updates if the button was pressed
-        if (isButtonPressed == 1) {
-            startLocation()
-            Log.d("resuming", "button pressed")
-        } else {
-            stopLocation()
-            Log.d("resuming", "button NOT pressed")
-        }
+        startLocation()
     }
 
     /* when the activity pauses */
     override fun onPause() {
         super.onPause()
-
-        // release the sensor resources
+        // stop reading from the sensors
         stopAccelerometer()
-        // stop the location listeners
         stopLocation()
     }
 
@@ -134,7 +117,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // stuff that saves the data
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    /* checks if external storage is writeable */
+
+    /* checks if external storage is writable */
     private val isExternalStorageWritable: Boolean
         get() {
             val state = Environment.getExternalStorageState()
@@ -252,7 +236,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         }
                         .create()
                         .show()
-
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
@@ -279,10 +262,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     // permission was granted, do the location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        if (isButtonPressed == 1) {
-                            //Request location updates:
-                            startLocation()
-                        }
+                        startLocation()
                     }
                 } else {
                     // TODO: disable the GPS, add an obvious UI change like change the buttons icon.
@@ -298,7 +278,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun startLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-
             // minTime: milliseconds, minDistance: meters
             mLocationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     (1 * 1000).toLong(), 2f, this)
@@ -309,7 +288,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun stopLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-
             mLocationManager!!.removeUpdates(this)
         }
 
@@ -323,8 +301,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         display(longitude, R.id.latitude)
         display(latitude, R.id.longitude)
 
-        // only save on gps updates
-        saveData(globX, globY, globZ, latitude, longitude)
+        // the app only adds new entries on new location updates
+        if (isButtonPressed == 1) {
+            saveData(globX, globY, globZ, latitude, longitude)
+        }
     }
 
     // these are not used yet, leave them here
