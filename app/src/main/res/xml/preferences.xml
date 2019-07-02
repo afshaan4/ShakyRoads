@@ -7,7 +7,6 @@
 
     <EditTextPreference
         app:key="filepath"
-        app:title="path to file"
-        app:defaultValue="ShakyroadsData.csv" />
+        app:title="path to file" />
 
 </PreferenceScreen>
