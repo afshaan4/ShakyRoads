@@ -162,7 +162,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 e.printStackTrace()
                 Log.e("holy crap", "FileOutputStream threw an IOException")
             }
-
         } else {
             Log.e("saveFile", "storage not writable, you probably don't have the privs")
             // TODO ask for permission instead of just complaining
@@ -290,7 +289,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationManager!!.removeUpdates(this)
         }
-
     }
 
     /* Called when location changes */
@@ -344,11 +342,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-
         return if (id == R.id.action_settings) {
             true
         } else super.onOptionsItemSelected(item)
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -378,5 +374,4 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer.closeDrawer(GravityCompat.START)
         return true
     }
-
 }
