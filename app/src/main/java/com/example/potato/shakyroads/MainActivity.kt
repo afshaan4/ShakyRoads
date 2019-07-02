@@ -132,9 +132,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun saveData(accX: Double, accY: Double, accZ: Double, lat: Double, lng: Double) {
         // filename and path to file
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val fileName = sharedPreferences.getString("signature", "")
+        val fileName = sharedPreferences.getString("signature", "ShakyRoadsData.csv")
         //val fileName = "ShakyroadsData.csv"
-        Log.i("SHITER", "name" + fileName)
+        Log.i("SHITER", fileName)
+        // TODO SHITS BROKEN, does'nt use saved name
         val path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS)
 
