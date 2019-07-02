@@ -3,11 +3,11 @@
 
     <SwitchPreferenceCompat
         app:key="replaceme"
-        app:title="do not click"/>
+        app:title="do not click" />
 
     <EditTextPreference
-        app:key="sensitivity"
-        app:title="accelerometer threshold"/>
-
+        app:key="filepath"
+        app:title="path to file"
+        app:defaultValue="ShakyroadsData.csv" />
 
 </PreferenceScreen>

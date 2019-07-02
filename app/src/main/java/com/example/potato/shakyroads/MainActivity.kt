@@ -30,6 +30,9 @@ import android.widget.TextView
 import android.Manifest
 import android.content.Intent
 import android.widget.Toast
+import androidx.preference.EditTextPreference
+import androidx.preference.PreferenceManager
+
 
 import com.opencsv.CSVWriter
 
@@ -128,7 +131,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     /* writes the GPS and acceleration data to a csv file */
     private fun saveData(accX: Double, accY: Double, accZ: Double, lat: Double, lng: Double) {
         // filename and path to file
-        val fileName = "ShakyroadsData.csv"
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val fileName = sharedPreferences.getString("signature", "")
+        //val fileName = "ShakyroadsData.csv"
+        Log.i("SHITER", "name" + fileName)
         val path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS)
 
