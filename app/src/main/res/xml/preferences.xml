@@ -6,7 +6,7 @@
         app:title="do not click" />
 
     <EditTextPreference
-        app:key="filepath"
-        app:title="path to file" />
+        app:key="filename"
+        app:title="filename" />
 
 </PreferenceScreen>
