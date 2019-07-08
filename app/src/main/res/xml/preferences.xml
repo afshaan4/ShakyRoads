@@ -3,10 +3,12 @@
 
     <SwitchPreferenceCompat
         app:key="replaceme"
-        app:title="do not click" />
+        app:title="do not click"
+        app:summary="do you know de wae?" />
 
     <EditTextPreference
         app:key="filename"
-        app:title="filename" />
+        app:title="Filename"
+        app:summary="filename for the logged data" />
 
 </PreferenceScreen>
