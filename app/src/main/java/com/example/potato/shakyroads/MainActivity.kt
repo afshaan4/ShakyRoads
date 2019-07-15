@@ -146,16 +146,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         OutputStreamWriter(FileOutputStream(file, true),
                                 StandardCharsets.UTF_8), ',', '"', '"', "\n")
 
-                // convert the data to strings
-                val latitude = lat.toString()
-                val longitude = lng.toString()
-                val x = accX.toString()
-                val y = accY.toString()
-                val z = accZ.toString()
-                // then to an array of strings
-                val entries = arrayOf(latitude, longitude, x, y, z)
-
-                // then write it
+                // write em
+                val entries = arrayOf(lat.toString(), lng.toString(), accX.toString(), accY.toString(), accZ.toString())
                 writer.writeNext(entries)
                 writer.close()
 
@@ -354,9 +346,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         when (id) {
             R.id.nav_camera -> {
-
-            }
-            R.id.nav_gallery -> {
 
             }
             R.id.nav_settings -> {
