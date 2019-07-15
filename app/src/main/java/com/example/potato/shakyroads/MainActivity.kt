@@ -84,10 +84,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView = findViewById<View>(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
-        // get an instance of SensorManager
+        // get an instance of SensorManager & linear motion accelerometer
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
-        // get an instance of the linear motion accelerometer
         mAccelerometer = mSensorManager!!.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
 
         // get an instance of LocationManager
@@ -121,26 +119,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     // stuff that saves the data
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /* checks if external storage is writable */
-    private val isExternalStorageWritable: Boolean
-        get() {
-            val state = Environment.getExternalStorageState()
-            return Environment.MEDIA_MOUNTED == state
-        }
+
+    /* Checks if external storage is available to read and write */
+    private fun isExternalStorageWritable(): Boolean {
+        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+    }
 
     /* writes the GPS and acceleration data to a csv file */
     private fun saveData(accX: Double, accY: Double, accZ: Double, lat: Double, lng: Double) {
         // filename and path to file
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val fileName = sharedPreferences.getString("filename", "ShakyroadsData.csv")
-        Log.i("SHITER", fileName)
         val path = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS)
+                Environment.DIRECTORY_DOCUMENTS + "/shakyroads/")
 
         // make the file object
         val file = File(path, fileName)
 
-        if (isExternalStorageWritable) {
+        if (isExternalStorageWritable()) {
             try {
                 // make sure the directory exists
                 path.mkdirs()
