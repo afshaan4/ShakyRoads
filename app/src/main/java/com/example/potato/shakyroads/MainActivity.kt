@@ -39,6 +39,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var globZ: Double = 0.0
     // stores the state of the button that toggles location
     private var isButtonPressed: Int = 0 // 0 = off, 1 = on
+    private var currentTime = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +74,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Snackbar.make(view, isButtonPressed.toString(), Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show()
             checkLocationPermission()
+            // for timestamping files, worst possible way to do it but hey im dumb
+            currentTime = Calendar.getInstance().time.toString()
         }
 
         val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
@@ -128,12 +132,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun saveData(accX: Double, accY: Double, accZ: Double, lat: Double, lng: Double) {
         // filename and path to file
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val fileName = sharedPreferences.getString("filename", "ShakyroadsData.csv")
+        val fileName = sharedPreferences.getString("filename", "ShakyroadsData")
         val path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOCUMENTS + "/shakyroads/")
+        val file = File(path, "$fileName $currentTime.csv")
 
-        // make the file object
-        val file = File(path, fileName)
 
         if (isExternalStorageWritable()) {
             try {
