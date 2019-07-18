@@ -30,7 +30,6 @@ import android.widget.TextView
 import android.Manifest
 import android.content.Intent
 import android.widget.Toast
-import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceManager
 
 
@@ -342,9 +341,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
-        val id = item.itemId
-
-        when (id) {
+        when (item.itemId) {
             R.id.nav_camera -> {
 
             }
