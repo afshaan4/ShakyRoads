@@ -32,14 +32,13 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 
-
 import com.opencsv.CSVWriter
 
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
-import java.util.*
+import java.util.Calendar
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -74,7 +73,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Snackbar.make(view, isButtonPressed.toString(), Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show()
             checkLocationPermission()
-            // for timestamping files, worst possible way to do it but hey im dumb
+            // for time-stamping files, worst possible way to do it but hey im dumb
             currentTime = Calendar.getInstance().time.toString()
         }
 
@@ -100,7 +99,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onResume() {
         super.onResume()
         // resume reading from the sensors
-        startAccelerometer()
+        mSensorManager!!.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
         startLocation()
     }
 
@@ -108,7 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onPause() {
         super.onPause()
         // stop reading from the sensors
-        stopAccelerometer()
+        mSensorManager!!.unregisterListener(this)
         stopLocation()
     }
 
@@ -149,7 +148,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 StandardCharsets.UTF_8), ',', '"', '"', "\n")
 
                 // write em
-                val entries = arrayOf(lat.toString(), lng.toString(), accX.toString(), accY.toString(), accZ.toString())
+                val entries = arrayOf(lat.toString(), lng.toString(), accX.toString(),
+                        accY.toString(), accZ.toString())
                 writer.writeNext(entries)
                 writer.close()
 
@@ -168,30 +168,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     // The accelerometer stuff
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /* start the sensor listener */
-    private fun startAccelerometer() {
-        mSensorManager!!.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
-    }
-
-    /* stop the sensor listener */
-    private fun stopAccelerometer() {
-        mSensorManager!!.unregisterListener(this)
-    }
-
     /* called whenever the accelerometer picks up any movement */
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_LINEAR_ACCELERATION) {
             val x = event.values[0].toDouble()
             val y = event.values[1].toDouble()
             val z = event.values[2].toDouble()
+            // update acceleration values
+            globX = x
+            globY = y
+            globZ = z
 
             display(x, R.id.X)
             display(y, R.id.Y)
             display(z, R.id.Z)
-
-            globX = x
-            globY = y
-            globZ = z
         }
     }
 
@@ -216,8 +206,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
+                // Show an explanation to the user asynchronously. After the user
                 // sees the explanation, try again to request the permission.
                 AlertDialog.Builder(this)
                         .setTitle(R.string.title_location_permission)
@@ -259,7 +248,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         startLocation()
                     }
                 } else {
-                    // TODO: disable the GPS, add an obvious UI change like change the buttons icon.
+                    // TODO: make it obvious the app can't do its thing
                     stopLocation()
                 }
                 return
@@ -308,7 +297,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onProviderDisabled(provider: String) {
         // tell the user when the location provider is disabled
         stopLocation()
-        Toast.makeText(this, "GPS disabled", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "GPS is turned off", Toast.LENGTH_LONG).show()
     }
 
 
@@ -359,7 +348,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
         }
-
         val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         return true
