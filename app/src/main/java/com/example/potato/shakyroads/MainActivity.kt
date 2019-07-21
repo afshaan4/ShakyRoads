@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    /* when the activity resumes */
     override fun onResume() {
         super.onResume()
         // resume reading from the sensors
@@ -103,9 +102,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startLocation()
     }
 
-    /* when the activity pauses */
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         // stop reading from the sensors
         mSensorManager!!.unregisterListener(this)
         stopLocation()
