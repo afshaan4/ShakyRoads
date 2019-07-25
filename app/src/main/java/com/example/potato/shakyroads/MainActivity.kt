@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         /*Button to toggle the logger*/
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
-            // switch the state of the button
             isButtonPressed = 1 - isButtonPressed // math tricks: 1 - 0 = 1 and 1 - 1 = 0.
             // TODO: change the button icon rather than showing a SnackBar
             Snackbar.make(view, isButtonPressed.toString(), Snackbar.LENGTH_SHORT)
@@ -267,10 +266,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     /* Remove the location listener to stop receiving location updates */
     private fun stopLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mLocationManager!!.removeUpdates(this)
-        }
+        mLocationManager!!.removeUpdates(this)
     }
 
     /* Called when location changes */
@@ -281,7 +277,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         display(longitude, R.id.latitude)
         display(latitude, R.id.longitude)
 
-        // the app only adds new entries on new location updates
         if (isButtonPressed == 1) {
             saveData(globX, globY, globZ, latitude, longitude)
         }
