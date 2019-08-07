@@ -44,7 +44,6 @@ import java.util.Calendar
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
         SensorEventListener, LocationListener {
 
-
     private var mSensorManager: SensorManager? = null
     private var mAccelerometer: Sensor? = null
     private var mLocationManager: LocationManager? = null
