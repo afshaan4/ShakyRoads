@@ -167,17 +167,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     /* called whenever the accelerometer picks up any movement */
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_LINEAR_ACCELERATION) {
-            val x = event.values[0].toDouble()
-            val y = event.values[1].toDouble()
-            val z = event.values[2].toDouble()
-            // update acceleration values
-            globX = x
-            globY = y
-            globZ = z
+            globX = event.values[0].toDouble()
+            globY = event.values[1].toDouble()
+            globZ = event.values[2].toDouble()
 
-            display(x, R.id.X)
-            display(y, R.id.Y)
-            display(z, R.id.Z)
+            display(globX, R.id.X)
+            display(globY, R.id.Y)
+            display(globZ, R.id.Z)
         }
     }
 
