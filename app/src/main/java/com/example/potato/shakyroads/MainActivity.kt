@@ -174,15 +174,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             globZ = event.values[2].toDouble()
 
             // calculate "jerk", m*s^-3
-            var elapsedTime: Long
             deltaTime.add(System.currentTimeMillis())
-            if (deltaTime.size >= 3) {
+
+            val elapsedTime: Long = if (deltaTime.size >= 3) {
                 deltaTime.removeAt(0) // pop off old readings
-                elapsedTime = deltaTime[0] - deltaTime[1]
+                deltaTime[0] - deltaTime[1]
             } else {
-                elapsedTime = 0
+                0
             }
-            // ooooooff
+            // please forgive me
             globX /= elapsedTime; globY /= elapsedTime; globZ /= elapsedTime
             display(globX, R.id.X)
             display(globY, R.id.Y)
