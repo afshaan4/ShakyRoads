@@ -1,3 +1,4 @@
+// this code is terrible please don't laugh
 package com.example.potato.shakyroads
 
 import android.content.Context
@@ -54,7 +55,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var globZ: Double = 0.0
     // stores the state of the button that toggles location
     private var isButtonPressed: Int = 0 // 0 = off, 1 = on
-    private var currentTime = ""
+    private var dateTime = ""
+    private var deltaTime = mutableListOf<Long>() // used to calc time passed
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +74,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .setAction("Action", null).show()
             checkLocationPermission()
             // for time-stamping files, worst possible way to do it but hey im dumb
-            currentTime = Calendar.getInstance().time.toString()
+            dateTime = Calendar.getInstance().time.toString()
         }
 
         val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
@@ -130,7 +132,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val fileName = sharedPreferences.getString("filename", "ShakyroadsData")
         val path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOCUMENTS + "/shakyroads/")
-        val file = File(path, "$fileName $currentTime.csv")
+        val file = File(path, "$fileName $dateTime.csv")
 
 
         if (isExternalStorageWritable()) {
@@ -141,7 +143,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 // get an instance of CSVWriter
                 val writer = CSVWriter(
                         OutputStreamWriter(FileOutputStream(file, true),
-                                StandardCharsets.UTF_8), ',', '"', '"', "\n")
+                                StandardCharsets.UTF_8), ',', CSVWriter.NO_QUOTE_CHARACTER, "\n")
 
                 // write em
                 val entries = arrayOf(lat.toString(), lng.toString(), accX.toString(),
@@ -171,9 +173,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             globY = event.values[1].toDouble()
             globZ = event.values[2].toDouble()
 
+            // calculate "jerk", m*s^-3
+            var elapsedTime: Long
+            deltaTime.add(System.currentTimeMillis())
+            if (deltaTime.size >= 3) {
+                deltaTime.removeAt(0) // pop off old readings
+                elapsedTime = deltaTime[0] - deltaTime[1]
+            } else {
+                elapsedTime = 0
+            }
+            // ooooooff
+            globX /= elapsedTime; globY /= elapsedTime; globZ /= elapsedTime
             display(globX, R.id.X)
             display(globY, R.id.Y)
             display(globZ, R.id.Z)
+            if (isButtonPressed == 1) {
+                saveData(globX, globY, globZ, 0.0, 0.0)
+            }
         }
     }
 
@@ -272,9 +288,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         display(longitude, R.id.latitude)
         display(latitude, R.id.longitude)
 
-        if (isButtonPressed == 1) {
-            saveData(globX, globY, globZ, latitude, longitude)
-        }
+//        if (isButtonPressed == 1) {
+//            saveData(globX, globY, globZ, latitude, longitude)
+//        }
     }
 
     // these are not used yet, leave them here
